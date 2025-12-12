@@ -18,6 +18,30 @@ public class MainServer {
         // Handle admin view
         server.createContext("/admin", new AdminHandler());
 
+        // Serve static files from "web" folder
+        server.createContext("/", new HttpHandler() {
+            @Override
+            public void handle(HttpExchange ex) throws IOException {
+                String path = ex.getRequestURI().getPath();
+                if (path.equals("/")) path = "/order.html"; // default page
+
+                // Absolute path using project root
+                File file = new File(System.getProperty("user.dir") + File.separator + "web" + path);
+                if (!file.exists()) {
+                    String notFound = "404 Not Found";
+                    ex.sendResponseHeaders(404, notFound.length());
+                    ex.getResponseBody().write(notFound.getBytes());
+                    ex.close();
+                    return;
+                }
+                byte[] data = java.nio.file.Files.readAllBytes(file.toPath());
+                ex.getResponseHeaders().add("Content-Type", getContentType(path));
+                ex.sendResponseHeaders(200, data.length);
+                ex.getResponseBody().write(data);
+                ex.close();
+            }
+        });
+
         server.setExecutor(null); // default executor
         server.start();
 
@@ -90,5 +114,12 @@ public class MainServer {
         }
         return map;
     }
-}
 
+    // Determine Content-Type for static files
+    private static String getContentType(String path) {
+        if (path.endsWith(".html")) return "text/html";
+        if (path.endsWith(".css")) return "text/css";
+        if (path.endsWith(".js")) return "application/javascript";
+        return "text/plain";
+    }
+}
