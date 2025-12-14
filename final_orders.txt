@@ -1,0 +1,36 @@
+--- FINAL ORDER #967689 ---
+Date: Sun Dec 14 11:12:47 GMT+08:00 2025
+Name: MASDI BIN MAHMUD
+Phone: 0174582770
+Address: 44 KG SEBERANG PAYA, MUKIM LENGKUAS, BUKIT PINANG
+Payment: COD
+Total: RM 11.50
+Items:
+  - Product ID: OAT002 (Qty: 1, Price: 6.50, Subtotal: 6.50)
+  - Product ID: CHIP001 (Qty: 1, Price: 5.00, Subtotal: 5.00)
+-------------------------
+
+--- FINAL ORDER #208277 ---
+Date: Sun Dec 14 11:16:48 GMT+08:00 2025
+Name: Nia
+Phone: 0124567896
+Address: USM Gelugor (main campus), Penang
+Payment: CC
+  Card #: 0236589748965231
+  Expiry: 05/30
+Total: RM 5.00
+Items:
+  - Product ID: CHIP001 (Qty: 1, Price: 5.00, Subtotal: 5.00)
+-------------------------
+
+--- FINAL ORDER #263525 ---
+Date: Sun Dec 14 11:17:43 GMT+08:00 2025
+Name: Maisarah binti Ahmad
+Phone: 0158967458
+Address: Uitm Permatang Pauh, Penang
+Payment: QR
+Total: RM 6.50
+Items:
+  - Product ID: OAT002 (Qty: 1, Price: 6.50, Subtotal: 6.50)
+-------------------------
+

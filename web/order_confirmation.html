@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Confirmed</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header>
+    <h1>Order Successfully Placed!</h1>
+</header>
+
+<main>
+    <div style="border: 2px solid green; padding: 20px; max-width: 600px; margin: 20px auto; text-align: center;">
+        <h2>Thank You for Your Order!</h2>
+        <p>Your order has been placed successfully and the details have been saved on the server.</p>
+
+        <p id="order-id-display" style="font-size: 1.2em; font-weight: bold;">Your Order ID is being retrieved...</p>
+
+        <p id="payment-instruction" style="margin-top: 15px; padding: 10px; border: 1px dashed #ccc;"></p>
+
+        <a href="/order.html">
+            <button style="margin-top: 20px; padding: 10px 30px; background-color: darkgreen; color: white;">
+                Start a New Order
+            </button>
+        </a>
+    </div>
+</main>
+
+<script>
+    // Utility function to read URL parameters
+    function getQueryParam(param) {
+        const urlParams = new URLSearchParams(window.location.search);
+        return urlParams.get(param);
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const orderId = getQueryParam('id');
+        const paymentMethod = getQueryParam('method');
+
+        const orderIdElement = document.getElementById('order-id-display');
+        const instructionElement = document.getElementById('payment-instruction');
+
+        // 1. Display Order ID
+        if (orderId) {
+            orderIdElement.textContent = `Your Order ID is: #${orderId}`;
+        } else {
+            orderIdElement.textContent = `Thank you for your purchase!`;
+        }
+
+        // 2. Display Payment Instructions based on method
+        let message = "";
+        let color = "darkgreen";
+
+        if (paymentMethod === 'COD') {
+            // Message for Cash on Delivery (COD)
+            message = "Thank you for your order! Please prepare the **exact amount of money** (RM TOTAL) when the courier delivers your items.";
+        } else if (paymentMethod === 'QR') {
+            // Message for QR Code
+            message = "Your QR code payment is pending. Please check your phone for the payment link/QR code and complete the transfer immediately.";
+            color = "#cc8800"; // Darker yellow/orange
+        }
+        // No special message needed for 'CC' (Credit Card) as payment is assumed complete.
+
+        if (message) {
+            instructionElement.innerHTML = message;
+            instructionElement.style.color = color;
+        } else {
+            // Hide instruction box if no special instruction is needed (e.g., for CC)
+            instructionElement.style.display = 'none';
+        }
+    });
+</script>
+
+<footer>
+    <p>&copy; 2025 CookieHaven</p>
+</footer>
+</body>
+</html>

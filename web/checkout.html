@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout | CookieHaven</title>
+    <link rel="stylesheet" href="style.css">
+    <script>
+        // Optional: Toggles visibility of the Credit Card fields based on payment selection
+        function togglePaymentForm() {
+            const ccFields = document.getElementById('credit-card-fields');
+            const paymentMethod = document.querySelector('input[name="paymentMethod"]:checked').value;
+            // Ensure fields are required only when CC is selected
+            const inputs = ccFields.querySelectorAll('input');
+
+            if (paymentMethod === 'CC') {
+                ccFields.style.display = 'block';
+                inputs.forEach(input => input.setAttribute('required', 'required'));
+            } else {
+                ccFields.style.display = 'none';
+                inputs.forEach(input => input.removeAttribute('required'));
+            }
+        }
+    </script>
+</head>
+<body onload="togglePaymentForm()">
+<header><h1>Checkout & Payment</h1></header>
+
+<main>
+    <form action="/checkout" method="POST" id="checkout-form">
+
+        <h2>1. Delivery Address</h2>
+        <label for="name">Full Name:</label>
+        <input type="text" id="name" name="name" required><br><br>
+
+        <label for="address">Full Delivery Address:</label>
+        <textarea id="address" name="address" rows="4" required></textarea><br><br>
+
+        <label for="phone">Phone Number:</label>
+        <input type="tel" id="phone" name="phone" required><br><br>
+
+        <h2>2. Payment Simulation</h2>
+
+        <fieldset>
+            <legend>Choose a Payment Method</legend>
+
+            <label>
+                <input type="radio" name="paymentMethod" value="COD" checked onclick="togglePaymentForm()">
+                Cash on Delivery (COD)
+            </label><br>
+
+            <label>
+                <input type="radio" name="paymentMethod" value="CC" onclick="togglePaymentForm()">
+                Credit Card
+            </label>
+
+            <div id="credit-card-fields" style="display:none; padding: 10px; border: 1px solid #ccc; margin-top: 5px;">
+                <label>Card Number :</label>
+                <input type="text" name="cc_number" placeholder="16 digits" pattern="\d{16}" title="Fake 16-digit card number"><br>
+                <label>Expiry :</label>
+                <input type="text" name="cc_expiry" placeholder="MM/YY" pattern="\d{2}/\d{2}" title="MM/YY"><br>
+            </div>
+            <br>
+
+            <label>
+                <input type="radio" name="paymentMethod" value="QR" onclick="togglePaymentForm()">
+                QR Code Option
+            </label>
+        </fieldset>
+
+        <button type="submit" style="margin-top: 20px; padding: 10px 30px;">
+            Place Order (RM TOTAL_PLACEHOLDER)
+        </button>
+
+    </form>
+</main>
+</body>
+</html>

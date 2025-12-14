@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shopping Cart | CookieHaven</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header>
+    <h1>Your Shopping Cart</h1>
+    <nav>
+        <a href="/order.html">Continue Shopping</a>
+    </nav>
+</header>
+
+<main>
+    <section id="cart-items">
+        <table>
+            <thead>
+            <tr>
+                <th>Product</th>
+                <th>Price</th>
+                <th>Quantity</th>
+                <th>Subtotal</th>
+                <th>Actions</th>
+            </tr>
+            </thead>
+            <tbody id="cart-table-body">
+            </tbody>
+        </table>
+    </section>
+
+    <section id="cart-summary">
+        <h2>Order Summary</h2>
+        <p>Total Items: <span id="cart-count">0</span></p>
+        <p>Total: RM <span id="cart-grand-total">0.00</span></p>
+
+        <a href="/checkout.html">
+            <button id="checkout-button">Proceed to Checkout</button>
+        </a>
+    </section>
+</main>
+
+<footer>
+    <p>&copy; 2025 CookieHaven</p>
+</footer>
+
+<script src="script.js"></script>
+</body>
+</html>
