@@ -34,3 +34,14 @@ Items:
   - Product ID: OAT002 (Qty: 1, Price: 6.50, Subtotal: 6.50)
 -------------------------
 
+--- FINAL ORDER #987952 ---
+Date: Sun Dec 14 12:19:47 GMT+08:00 2025
+Name: dina
+Phone: 0145638965
+Address: usm
+Payment: COD
+Total: RM 6.50
+Items:
+  - Product ID: OAT002 (Qty: 1, Price: 6.50, Subtotal: 6.50)
+-------------------------
+
