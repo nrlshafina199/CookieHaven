@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Manage Products | CookieHaven</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            background: #f8f1e7;
+            margin: 0;
+            display: flex;
+        }
+
+        .sidebar {
+            width: 250px;
+            background: #5d4037;
+            height: 100vh;
+            color: white;
+            padding: 20px;
+            position: fixed;
+        }
+
+        .sidebar h2 {
+            margin-top: 0;
+        }
+
+        .sidebar a {
+            display: block;
+            color: white;
+            padding: 10px;
+            text-decoration: none;
+            margin: 5px 0;
+            border-radius: 5px;
+        }
+
+        .sidebar a:hover {
+            background: #8d6e63;
+        }
+
+        .main {
+            margin-left: 280px;
+            padding: 40px;
+            width: calc(100% - 320px);
+        }
+
+        .form-box {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+
+        .form-box h3 {
+            margin-top: 0;
+            color: #5d4037;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #5d4037;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        input, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            box-sizing: border-box;
+            font-size: 14px;
+        }
+
+        input:focus, textarea:focus {
+            outline: none;
+            border-color: #5d4037;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        button {
+            background: #5d4037;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        button:hover {
+            background: #3e2723;
+        }
+
+        table {
+            width: 100%;
+            background: white;
+            border-collapse: collapse;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        }
+
+        th, td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+
+        th {
+            background: #8d6e63;
+            color: white;
+            font-weight: bold;
+        }
+
+        .delete-btn {
+            background: #d32f2f;
+            padding: 8px 16px;
+            font-size: 14px;
+        }
+
+        .delete-btn:hover {
+            background: #b71c1c;
+        }
+
+        .success-msg {
+            background: #4caf50;
+            color: white;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #999;
+        }
+    </style>
+</head>
+<body>
+<div class="sidebar">
+    <h2>CookieHaven</h2>
+    <a href="/admin/dashboard">🏠 Dashboard</a>
+    <a href="/admin/products" style="background: #8d6e63;">🍪 Products</a>
+    <a href="/admin/orders">📋 Orders</a>
+    <a href="/admin/reports">📊 Reports</a>
+    <a href="/admin/logout">🚪 Logout</a>
+</div>
+
+<div class="main">
+    <h1>Manage Product Catalog</h1>
+
+    <div class="success-msg" id="successMsg"></div>
+
+    <div class="form-box">
+        <h3>➕ Add New Cookie</h3>
+        <form id="addForm">
+            <div class="form-group">
+                <label for="pId">Product ID *</label>
+                <input type="text" id="pId" placeholder="e.g., CHIP03, OAT04" required>
+            </div>
+
+            <div class="form-group">
+                <label for="pName">Cookie Name *</label>
+                <input type="text" id="pName" placeholder="e.g., Double Chocolate Chip" required>
+            </div>
+
+            <div class="form-group">
+                <label for="pPrice">Price (RM) *</label>
+                <input type="number" step="0.01" id="pPrice" placeholder="e.g., 6.50" required>
+            </div>
+
+            <div class="form-group">
+                <label for="pStock">Stock Quantity *</label>
+                <input type="number" id="pStock" placeholder="e.g., 100" required>
+            </div>
+
+            <div class="form-group">
+                <label for="pDesc">Description *</label>
+                <textarea id="pDesc" placeholder="Describe the cookie..." required></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="pIngredients">Ingredients *</label>
+                <textarea id="pIngredients" placeholder="e.g., Flour, Sugar, Butter, Chocolate Chips" required></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="pAllergens">Allergens</label>
+                <input type="text" id="pAllergens" placeholder="e.g., Dairy, Nuts, or None" value="None">
+            </div>
+
+            <button type="submit">➕ Add Product to Catalog</button>
+        </form>
+    </div>
+
+    <h3>Current Products</h3>
+    <table>
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Price</th>
+            <th>Stock</th>
+            <th>Description</th>
+            <th>Action</th>
+        </tr>
+        </thead>
+        <tbody id="product-table-body">
+        <tr><td colspan="6" class="loading">Loading products...</td></tr>
+        </tbody>
+    </table>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', loadTable);
+
+    async function loadTable() {
+        try {
+            const res = await fetch('/admin/products/api');
+
+            if (!res.ok) {
+                throw new Error('Failed to fetch products');
+            }
+
+            const products = await res.json();
+            const body = document.getElementById('product-table-body');
+
+            if (products.length === 0) {
+                body.innerHTML = '<tr><td colspan="6" style="text-align:center; color:#999;">No products yet. Add your first cookie above!</td></tr>';
+                return;
+            }
+
+            body.innerHTML = products.map(p => `
+                <tr>
+                    <td>${p.id}</td>
+                    <td>${p.name}</td>
+                    <td>RM ${p.price.toFixed(2)}</td>
+                    <td>${p.stock}</td>
+                    <td><small><b>Ingredients:</b> ${p.ingredients}<br><b>Allergens:</b> ${p.allergens}</small></td>
+                    <td><button class="delete-btn" onclick="deleteProduct('${p.id}')">Delete</button></td>
+                </tr>
+            `).join('');
+
+        } catch (err) {
+            console.error('Error loading products:', err);
+            document.getElementById('product-table-body').innerHTML =
+                '<tr><td colspan="6" style="text-align:center; color:red;">Error loading products. Please refresh.</td></tr>';
+        }
+    }
+
+    document.getElementById('addForm').onsubmit = async (e) => {
+        e.preventDefault();
+
+        const params = new URLSearchParams({
+            action: 'add',
+            productId: document.getElementById('pId').value.trim(),
+            name: document.getElementById('pName').value.trim(),
+            price: document.getElementById('pPrice').value,
+            stock: document.getElementById('pStock').value,
+            description: document.getElementById('pDesc').value.trim(),
+            ingredients: document.getElementById('pIngredients').value.trim(),
+            allergens: document.getElementById('pAllergens').value.trim()
+        });
+
+        try {
+            const res = await fetch('/admin/products', {
+                method: 'POST',
+                body: params
+            });
+
+            const data = await res.json();
+
+            if (data.success) {
+                showMessage('✅ Product added successfully!');
+                document.getElementById('addForm').reset();
+                document.getElementById('pAllergens').value = 'None';
+                await loadTable();
+            } else {
+                alert('❌ Error: ' + data.message);
+            }
+
+        } catch (err) {
+            console.error('Error adding product:', err);
+            alert('❌ Failed to add product. Please try again.');
+        }
+    };
+
+    async function deleteProduct(id) {
+        if (!confirm('Are you sure you want to delete this cookie?')) {
+            return;
+        }
+
+        const params = new URLSearchParams({
+            action: 'delete',
+            productId: id
+        });
+
+        try {
+            const res = await fetch('/admin/products', {
+                method: 'POST',
+                body: params
+            });
+
+            const data = await res.json();
+
+            if (data.success) {
+                showMessage('✅ Product deleted successfully!');
+                await loadTable();
+            } else {
+                alert('❌ Error: ' + data.message);
+            }
+
+        } catch (err) {
+            console.error('Error deleting product:', err);
+            alert('❌ Failed to delete product. Please try again.');
+        }
+    }
+
+    function showMessage(msg) {
+        const msgEl = document.getElementById('successMsg');
+        msgEl.textContent = msg;
+        msgEl.style.display = 'block';
+        setTimeout(() => {
+            msgEl.style.display = 'none';
+        }, 3000);
+    }
+
+    function escapeHtml(text) {
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
+    }
+</script>
+</body>
+</html>

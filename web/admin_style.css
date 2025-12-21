@@ -1,0 +1,79 @@
+:root {
+    --primary-color: #5d4037; /* Dark Chocolate */
+    --accent-color: #8d6e63;  /* Milk Chocolate */
+    --bg-color: #f8f1e7;      /* Cream */
+    --text-color: #3e2723;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    margin: 0;
+}
+
+header {
+    background-color: var(--primary-color);
+    color: white;
+    padding: 1rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+header nav a {
+    color: #d7ccc8;
+    text-decoration: none;
+    margin-left: 15px;
+    font-weight: bold;
+}
+
+header nav a:hover { color: white; }
+
+main { padding: 2rem; max-width: 1000px; margin: auto; }
+
+/* Dashboard Cards */
+.stats-grid {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.stat-card {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    flex: 1;
+    text-align: center;
+    border-bottom: 4px solid var(--accent-color);
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+}
+
+.stat-card h3 { margin: 0; color: var(--accent-color); }
+.stat-card p { font-size: 1.5rem; font-weight: bold; margin: 10px 0 0; }
+
+/* Tables */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+th { background-color: var(--accent-color); color: white; padding: 12px; }
+td { padding: 12px; border-bottom: 1px solid #eee; }
+
+/* Buttons */
+.btn {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.btn-add { background-color: #4caf50; color: white; }
+.btn-delete { background-color: #e53935; color: white; }
+.btn-primary { background-color: var(--primary-color); color: white; }

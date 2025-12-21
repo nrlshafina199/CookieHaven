@@ -1,56 +1,54 @@
 package server.model;
 
-import java.util.List;
-import server.model.CartItem;
+import java.io.Serializable;
+import java.util.*;
 
-public class Order {
-    private final long orderId;
-    private final String customerName;
-    private final String phone;
-    private final String address;
-    private final String paymentMethod;
-    private final String ccNumber; // <--- NEW FIELD
-    private final String ccExpiry; // <--- NEW FIELD
-    private final List<CartItem> items;
-    private final double total;
+public class Order implements Serializable {
+    private static final long serialVersionUID = 1L;
 
-    public Order(long orderId, String customerName, String phone, String address, String paymentMethod,
-                 String ccNumber, String ccExpiry,
+    protected final long orderId;
+    protected final String customerName;
+    protected final String phone;
+    protected final String address;
+    protected final String paymentMethod;
+    protected final String ccNumber;
+    protected final String ccExpiry;
+    protected final List<CartItem> items;
+    protected final double total;
+    protected final String status;
+    protected final Date orderDate;
+
+    public Order(long orderId, String customerName, String phone, String address,
+                 String paymentMethod, String ccNumber, String ccExpiry,
                  List<CartItem> items, double total) {
         this.orderId = orderId;
         this.customerName = customerName;
         this.phone = phone;
         this.address = address;
         this.paymentMethod = paymentMethod;
-        this.ccNumber = ccNumber;   // Initialized
-        this.ccExpiry = ccExpiry;   // Initialized
+        this.ccNumber = ccNumber;
+        this.ccExpiry = ccExpiry;
         this.items = items;
         this.total = total;
+        this.status = "Pending";
+        this.orderDate = new Date();
     }
 
-    // Formats the order details for saving to a file
+    // --- GETTERS (Fixed: All symbols now exist) ---
+    public long getOrderId() { return orderId; }
+    public String getCustomerName() { return customerName; }
+    public String getPhone() { return phone; }
+    public String getAddress() { return address; }
+    public String getPaymentMethod() { return paymentMethod; }
+    public String getCcNumber() { return ccNumber; } // This fixes your error
+    public String getCcExpiry() { return ccExpiry; } // Added for safety
+    public List<CartItem> getItems() { return items; }
+    public double getTotal() { return total; }
+    public String getStatus() { return status; }
+    public Date getOrderDate() { return orderDate; }
+
     public String toText() {
-        StringBuilder sb = new StringBuilder();
-        sb.append(String.format("--- FINAL ORDER #%d ---\n", orderId));
-        sb.append(String.format("Date: %s\n", new java.util.Date().toString()));
-        sb.append(String.format("Name: %s\n", customerName));
-        sb.append(String.format("Phone: %s\n", phone));
-        sb.append(String.format("Address: %s\n", address));
-        sb.append(String.format("Payment: %s\n", paymentMethod));
-
-        // Include payment details for verification (Will show "-" for COD/QR)
-        if (!ccNumber.equals("-")) {
-            sb.append(String.format("  Card #: %s\n", ccNumber));
-            sb.append(String.format("  Expiry: %s\n", ccExpiry));
-        }
-
-        sb.append(String.format("Total: RM %.2f\n", total));
-        sb.append("Items:\n");
-        for (CartItem item : items) {
-            sb.append(String.format("  - Product ID: %s (Qty: %d, Price: %.2f, Subtotal: %.2f)\n",
-                    item.getProductId(), item.getQuantity(), item.getPrice(), item.getPrice() * item.getQuantity()));
-        }
-        sb.append("-------------------------\n\n");
-        return sb.toString();
+        return String.format("ID: %d | Customer: %s | Total: RM %.2f | Status: %s | Phone: %s\n",
+                orderId, customerName, total, status, phone);
     }
 }
