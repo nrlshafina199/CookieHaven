@@ -20,6 +20,14 @@
                 ccFields.style.display = 'none';
                 inputs.forEach(input => input.removeAttribute('required'));
             }
+            updatePlaceOrderButton(); // Call to update button state
+        }
+
+        // New: Enable/disable button based on checkbox
+        function updatePlaceOrderButton() {
+            const agreementCheckbox = document.getElementById('agreement');
+            const placeOrderBtn = document.getElementById('placeOrderBtn');
+            placeOrderBtn.disabled = !agreementCheckbox.checked;
         }
     </script>
 </head>
@@ -68,7 +76,16 @@
             </label>
         </fieldset>
 
-        <button type="submit" style="margin-top: 20px; padding: 10px 30px;">
+        <!-- NEW: REQUIRED AGREEMENT CHECKBOX -->
+        <div style="margin: 30px 0; padding: 15px; background: #f5f0eb; border-radius: 10px; border-left: 5px solid #5d4037;">
+            <label>
+                <input type="checkbox" id="agreement" required onchange="updatePlaceOrderButton()">
+                <strong>I agree to share this information for order processing and delivery purposes only.</strong><br>
+                <small style="font-size: 14px; color: #8d6e63;">Your data will be used solely to fulfill this order and will not be shared with third parties.</small>
+            </label>
+        </div>
+
+        <button type="submit" id="placeOrderBtn" style="margin-top: 20px; padding: 10px 30px; background: #5d4037; color: white; border: none; border-radius: 50px; cursor: pointer; font-size: 16px; transition: all 0.3s;" disabled>
             Place Order (RM TOTAL_PLACEHOLDER)
         </button>
 

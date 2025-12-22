@@ -1,3 +1,0 @@
-CHIP01|Classic Choco Chip|5.0|97|Rich chocolate bits|Flour, Sugar, Butter|Dairy
-OAT02|Oatmeal Raisin|6.5|75|Chewy oats with raisins|Oats, Raisins|None
-PB03|Peanut Butter Delight|7.0|60|Smooth peanut butter cookies|Peanut Butter, Flour|Nuts
