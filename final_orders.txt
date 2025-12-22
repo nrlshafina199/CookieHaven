@@ -22,6 +22,17 @@ Items:
   - Product ID: OAT002 (Qty: 1, Price: 6.50, Subtotal: 6.50)
 -------------------------
 
+--- FINAL ORDER #393967 ---
+Date: Sun Dec 14 12:26:33 GMT+08:00 2025
+Name: aina
+Phone: 0189665877
+Address: usm kubang kerian
+Payment: QR
+Total: RM 6.50
+Items:
+  - Product ID: OAT002 (Qty: 1, Price: 6.50, Subtotal: 6.50)
+-------------------------
+
 --- FINAL ORDER #735326 ---
 Date: Sun Dec 14 13:22:15 GMT+08:00 2025
 Name: Nurul Shafina
@@ -121,5 +132,31 @@ Payment: COD
 Total: RM 13.00
 Items:
   - Product ID: OAT02 (Qty: 2, Price: 6.50, Subtotal: 13.00)
+-------------------------
+
+--- FINAL ORDER #1766411573859 ---
+Date: Mon Dec 22 21:52:53 GMT+08:00 2025
+Name: jiha
+Phone: 0174582770
+Address: 44 KG SEBERANG PAYA, MUKIM LENGKUAS, BUKIT PINANG
+Payment: COD
+Total: RM 31.50
+Items:
+  - Product ID: PB03 (Qty: 1, Price: 7.00, Subtotal: 7.00)
+  - Product ID: OAT02 (Qty: 3, Price: 6.50, Subtotal: 19.50)
+  - Product ID: CHIP01 (Qty: 1, Price: 5.00, Subtotal: 5.00)
+-------------------------
+
+--- FINAL ORDER #1766411930205 ---
+Date: Mon Dec 22 21:58:50 GMT+08:00 2025
+Name: jiha
+Phone: 0124598677
+Address: usm
+Payment: CC
+  Card #: 1234567890321456
+  Expiry: 06/26
+Total: RM 7.00
+Items:
+  - Product ID: PB03 (Qty: 1, Price: 7.00, Subtotal: 7.00)
 -------------------------
 
