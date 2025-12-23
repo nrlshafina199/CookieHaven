@@ -32,6 +32,7 @@ public class AuthHandler implements HttpHandler {
     @Override
     public void handle(HttpExchange ex) throws IOException {
         String path = ex.getRequestURI().getPath();
+
         // Ignore static files
         if (path.equals("/") || path.endsWith(".html") || path.endsWith(".css") || path.endsWith(".png") || path.endsWith(".jpg")) {
             return;
@@ -55,6 +56,7 @@ public class AuthHandler implements HttpHandler {
                 if (user != null && BCrypt.checkpw(data.get("password"), user.getPassword())) {
                     String sessionId = UUID.randomUUID().toString();
                     activeSessions.put(sessionId, user.getUsername());
+                    // Set secure cookie for session tracking
                     ex.getResponseHeaders().add("Set-Cookie", "AUTH_SESSION=" + sessionId + "; Path=/; HttpOnly");
                     sendJsonResponse(ex, "{\"success\": true}");
                 } else {
@@ -62,22 +64,54 @@ public class AuthHandler implements HttpHandler {
                 }
                 ex.close();
             }
-        } else if ("GET".equalsIgnoreCase(ex.getRequestMethod())) {
+        }
+        else if ("GET".equalsIgnoreCase(ex.getRequestMethod())) {
             String cookie = ex.getRequestHeaders().getFirst("Cookie");
             String sid = extractSid(cookie);
-            String username = activeSessions.get(sid);
+            String username = (sid != null) ? activeSessions.get(sid) : null;
 
+            // 1. FORGOT PASSWORD (Must be accessible without login)
+            if (path.contains("/api/forgot-password")) {
+                String query = ex.getRequestURI().getQuery();
+                if (query != null && query.contains("=")) {
+                    String email = query.split("=")[1];
+                    boolean found = false;
+                    for (User u : userDatabase.values()) {
+                        if (u.getEmail().equalsIgnoreCase(email)) {
+                            found = true;
+                            break;
+                        }
+                    }
+                    if (found) {
+                        sendJsonResponse(ex, "{\"success\": true}");
+                    } else {
+                        ex.sendResponseHeaders(404, -1);
+                        ex.close();
+                    }
+                }
+                return;
+            }
+
+            // 2. USER DATA (Modified to return null if guest, allowing Home page to load)
+            if (path.contains("/api/user-data")) {
+                if (username != null) {
+                    User user = userDatabase.get(username);
+                    sendJsonResponse(ex, "{\"username\":\"" + user.getUsername() + "\", \"email\":\"" + user.getEmail() + "\"}");
+                } else {
+                    // Send null so index.html knows to show the guest view
+                    sendJsonResponse(ex, "{\"username\": null}");
+                }
+                return;
+            }
+
+            // 3. STRICT SESSION CHECK (Only for protected actions like logout/history)
             if (username == null) {
                 ex.sendResponseHeaders(401, -1);
                 ex.close();
                 return;
             }
 
-            if (path.contains("/api/user-data")) {
-                User user = userDatabase.get(username);
-                sendJsonResponse(ex, "{\"username\":\"" + user.getUsername() + "\", \"email\":\"" + user.getEmail() + "\"}");
-            }
-            else if (path.contains("/api/user-orders")) {
+            if (path.contains("/api/user-orders")) {
                 loadOrdersForUser(ex, username);
             }
             else if (path.contains("/logout")) {

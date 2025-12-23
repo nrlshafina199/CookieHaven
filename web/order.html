@@ -127,8 +127,12 @@
 </section>
 
 <footer>
-    <p>&copy; 2025 CookieHaven Bakery | <a href="#" style="color: #d7ccc8; text-decoration: none;">Privacy Policy (PDPA Compliance)</a> | <a href="#" style="color: #d7ccc8; text-decoration: none;">Terms of Service</a></p>
-    <p style="font-size: 12px; color: #8d6e63; margin-top: 10px;">We process your name and email only for order fulfillment.</p>
+    <p>
+        &copy; 2025 CookieHaven Bakery |
+        <a href="privacy.html" style="color: #d7ccc8; text-decoration: none;">Privacy Policy (PDPA Compliance)</a> |
+        <a href="terms.html" style="color: #d7ccc8; text-decoration: none;">Terms of Service</a>
+    </p>
+    <p style="font-size: 12px; color: #8d6e63; margin-top: 10px;">Your privacy matters to us.</p>
 </footer>
 
 <div id="cookie-notice" style="position: fixed; bottom: 20px; left: 20px; right: 20px; background: #333; color: white; padding: 20px; border-radius: 10px; display: none; z-index: 10000; box-shadow: 0 4px 15px rgba(0,0,0,0.3);">
@@ -143,99 +147,101 @@
         loadProducts();
         updateCartCount();
 
-        // Show cookie popup only if not previously accepted
         if(!localStorage.getItem('cookieConsent')) {
             document.getElementById('cookie-notice').style.display = 'block';
         }
     });
 
-    function acceptCookies() {
-        localStorage.setItem('cookieConsent', 'true');
-        document.getElementById('cookie-notice').style.display = 'none';
-    }
-
     async function loadProducts() {
-    const container = document.getElementById("product-container");
-    try {
-        const res = await fetch("/admin/products/api");
-        if (!res.ok) throw new Error("Server error");
-
-        const products = await res.json();
-        if (products.length === 0) {
-            container.innerHTML = '<div>No cookies available!</div>';
-            return;
-        }
-
-        container.innerHTML = products.map(p => `
-            <div class="product-card" style="text-align: center; padding: 25px; background: white; border-radius: 15px; border: 2px solid #5d4037;">
-                <h3 style="margin-bottom: 5px;">${p.name}</h3>
-                <p style="font-size: 0.9em; color: #795548; margin-bottom: 15px;"><i>${p.description || ''}</i></p>
-
-                <div style="font-size: 0.8em; margin-bottom: 20px; line-height: 1.4;">
-                    <div style="margin-bottom: 2px;"><strong>Contains:</strong> ${p.allergens || 'None'}</div>
-                    <div><strong>Ingredients:</strong> ${p.ingredients || 'Secret Recipe'}</div>
-                </div>
-
-                <p style="font-size: 1.4em; color: #d84315; font-weight: bold; margin-bottom: 8px;">RM ${(p.price || 0).toFixed(2)}</p>
-
-                <div style="font-size: 0.75em; margin-bottom: 20px; color: ${p.stock < 10 ? '#d84315' : '#2e7d32'}; font-weight: normal;">
-                    Stock: ${p.stock ?? 0}
-                </div>
-
-                <div class="qty-controls" style="display: flex; justify-content: center; align-items: center; gap: 10px; margin-bottom: 15px;">
-                    <button class="qty-btn" onclick="changeQty('${p.id}', -1)">−</button>
-                    <input type="number" class="qty-input" id="qty_${p.id}" value="1" min="1" readonly style="width: 40px; text-align: center; border: 1px solid #5d4037; border-radius: 5px;">
-                    <button class="qty-btn" onclick="changeQty('${p.id}', 1)">+</button>
-                </div>
-                <button class="add-btn" onclick="addToCart('${p.id}')" style="width: 100%; padding: 10px; background: #5d4037; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold;">Add to Cart</button>
-            </div>
-        `).join('');
-    } catch (e) {
-        console.error("Catalog Error:", e);
-        container.innerHTML = '<div style="color:red;">Failed to load catalog. Please check if Server is running.</div>';
-    }
-}
-    function changeQty(id, delta) {
-        const input = document.getElementById('qty_' + id);
-        let val = parseInt(input.value) + delta;
-        if (val < 1) val = 1;
-        input.value = val;
-    }
-
-    async function addToCart(productId) {
-    const qtyInput = document.getElementById('qty_' + productId);
-    const qty = qtyInput.value;
-
-    // Step 1: Check if the user is logged in before adding to cart
+        const container = document.getElementById("product-container");
         try {
-            const checkAuth = await fetch("/api/user-data");
+            // Ensure this endpoint exists in your AdminProductHandler or MainServer
+            const res = await fetch("/admin/products/api");
+            if (!res.ok) throw new Error("Server returned status: " + res.status);
 
-            if (!checkAuth.ok) {
-                // If server returns 401 Unauthorized, send them to login
-                alert("Please login first to start shopping for cookies! 🍪");
-                window.location.href = "login.html";
+            const products = await res.json();
+            if (products.length === 0) {
+                container.innerHTML = '<div>No cookies available!</div>';
                 return;
             }
 
-            // Step 2: If logged in, proceed with adding to cart
+            container.innerHTML = products.map(p => `
+                <div class="product-card">
+                    <h3>${p.name}</h3>
+                    <p><i>${p.description || ''}</i></p>
+                    <div style="font-size: 0.8em; margin-bottom: 20px;">
+                        <strong>Contains:</strong> ${p.allergens || 'None'}<br>
+                        <strong>Ingredients:</strong> ${p.ingredients || 'Secret Recipe'}
+                    </div>
+                    <p style="font-size: 1.4em; color: #d84315; font-weight: bold;">RM ${(p.price || 0).toFixed(2)}</p>
+                    <div style="font-size: 0.75em; margin-bottom: 20px; color: ${p.stock < 10 ? '#d84315' : '#2e7d32'}; font-weight: bold;">
+                        Stock: ${p.stock ?? 0} ${p.stock < 10 ? '(Low Stock!)' : ''}
+                    </div>
+                    <div class="qty-controls">
+                        <button class="qty-btn" onclick="changeQty('${p.id}', -1)">−</button>
+                        <input type="number" class="qty-input" id="qty_${p.id}" value="1" min="1" readonly>
+                        <button class="qty-btn" onclick="changeQty('${p.id}', 1)">+</button>
+                    </div>
+                    <button class="add-btn" onclick="addToCart('${p.id}')">Add to Cart</button>
+                </div>
+            `).join('');
+        } catch (e) {
+            console.error("Catalog Error:", e);
+            container.innerHTML = '<div style="color:red;">Failed to load catalog. Is MainServer running?</div>';
+        }
+    }
+
+    async function addToCart(productId) {
+        const qtyInput = document.getElementById('qty_' + productId);
+        const qty = qtyInput.value;
+
+        try {
+            // 1. Prepare and send the request to CartAPIServlet
             const params = new URLSearchParams();
             params.append("action", "add");
             params.append("productId", productId);
             params.append("quantity", qty);
 
-            const res = await fetch("/api/cart", { method: "POST", body: params });
-            const data = await res.json();
-            if (data.success) {
-                alert("✓ Added to cart!");
-                updateCartCount();
-                qtyInput.value = 1;
+            const res = await fetch("/api/cart", {
+                method: "POST",
+                body: params
+            });
+
+            // 2. Handle unauthorized access (User is not logged in)
+            if (res.status === 401) {
+                // Your custom alert message for guests
+                alert("Please login first to start shopping for cookies! 🍪");
+                window.location.href = "login.html";
+                return;
             }
-        }
-        catch (e) {
+
+            // 3. Handle successful response (Status 200)
+            if (res.ok) {
+                const data = await res.json();
+                if (data.success) {
+                    // Your custom success message
+                    alert("✓ Added to cart!");
+                    updateCartCount();
+                    qtyInput.value = 1;
+                }
+            } else {
+                // Handle other server errors (e.g., product not found)
+                const errorData = await res.json();
+                alert("Error: " + errorData.message);
+            }
+
+        } catch (e) {
             console.error("Cart Error:", e);
+            // Fallback alert if the fetch request fails completely
             alert("Hi! Please log in first to add items to your cart.");
             window.location.href = "login.html";
         }
+    }
+    function changeQty(id, delta) {
+        const input = document.getElementById('qty_' + id);
+        let val = parseInt(input.value) + delta;
+        if (val < 1) val = 1;
+        input.value = val;
     }
 
     async function updateCartCount() {
@@ -244,7 +250,7 @@
             const data = await res.json();
             document.getElementById("cart-count").textContent = data.cartCount;
         } catch (e) {
-            console.error("Cart count error:", e);
+            console.log("Cart empty or not logged in.");
         }
     }
 </script>

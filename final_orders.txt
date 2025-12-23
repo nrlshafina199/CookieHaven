@@ -160,3 +160,141 @@ Items:
   - Product ID: PB03 (Qty: 1, Price: 7.00, Subtotal: 7.00)
 -------------------------
 
+--- FINAL ORDER #1766436345025 ---
+Date: Tue Dec 23 04:45:45 GMT+08:00 2025
+Name: nur irdina
+Phone: 0166973245
+Address: usm
+Payment: QR
+Total: RM 7.00
+Items:
+  - Product ID: PB03 (Qty: 1, Price: 7.00, Subtotal: 7.00)
+-------------------------
+
+--- FINAL ORDER #1766438028131 ---
+Date: Tue Dec 23 05:13:48 GMT+08:00 2025
+Name: nur irdina
+Phone: 0166973245
+Address: usm
+Payment: COD
+Total: RM 7.00
+Items:
+  - Product ID: PB03 (Qty: 1, Price: 7.00, Subtotal: 7.00)
+-------------------------
+
+--- FINAL ORDER #1766438715583 ---
+Date: Tue Dec 23 05:25:15 GMT+08:00 2025
+Name: nur irdina
+Phone: 0166973245
+Address: usm
+Payment: COD
+Total: RM 112.00
+Items:
+  - Product ID: PB03 (Qty: 16, Price: 7.00, Subtotal: 112.00)
+-------------------------
+
+--- FINAL ORDER #1766440495353 ---
+Date: Tue Dec 23 05:54:55 GMT+08:00 2025
+Name: nur irdina
+Phone: 0166973245
+Address: usm
+Payment: QR
+Total: RM 11.50
+Items:
+  - Product ID: OAT02 (Qty: 1, Price: 6.50, Subtotal: 6.50)
+  - Product ID: CHIP01 (Qty: 1, Price: 5.00, Subtotal: 5.00)
+-------------------------
+
+--- FINAL ORDER #1766441133026 ---
+Date: Tue Dec 23 06:05:33 GMT+08:00 2025
+Name: nur irdina
+Phone: 0166973245
+Address: usm
+Payment: COD
+Total: RM 5.00
+Items:
+  - Product ID: CHIP01 (Qty: 1, Price: 5.00, Subtotal: 5.00)
+-------------------------
+
+--- FINAL ORDER #1766441310327 ---
+Date: Tue Dec 23 06:08:30 GMT+08:00 2025
+Name: nur irdina
+Phone: 0166973245
+Address: usm
+Payment: COD
+Total: RM 20.00
+Items:
+  - Product ID: PB03 (Qty: 1, Price: 7.00, Subtotal: 7.00)
+  - Product ID: OAT02 (Qty: 2, Price: 6.50, Subtotal: 13.00)
+-------------------------
+
+--- FINAL ORDER #1766444439840 ---
+Date: Tue Dec 23 07:00:39 GMT+08:00 2025
+Name: nur irdina
+Phone: 0166973245
+Address: usm
+Payment: COD
+Total: RM 11.50
+Items:
+  - Product ID: OAT02 (Qty: 1, Price: 6.50, Subtotal: 6.50)
+  - Product ID: CHIP01 (Qty: 1, Price: 5.00, Subtotal: 5.00)
+-------------------------
+
+--- FINAL ORDER #1766467403458 ---
+Date: Tue Dec 23 13:23:23 GMT+08:00 2025
+Name: nur irdina
+Phone: 0166973245
+Address: usm
+Payment: COD
+Total: RM 5.00
+Items:
+  - Product ID: CHIP01 (Qty: 1, Price: 5.00, Subtotal: 5.00)
+-------------------------
+
+--- FINAL ORDER #1766494977571 ---
+Date: Tue Dec 23 21:02:57 GMT+08:00 2025
+Name: nur irdina
+Phone: 0166973245
+Address: usm
+Payment: COD
+Total: RM 11.50
+Items:
+  - Product ID: CHIP01 (Qty: 1, Price: 5.00, Subtotal: 5.00)
+  - Product ID: OAT02 (Qty: 1, Price: 6.50, Subtotal: 6.50)
+-------------------------
+
+--- FINAL ORDER #1766496394315 ---
+Date: Tue Dec 23 21:26:34 GMT+08:00 2025
+Name: nur irdina
+Phone: 0166973245
+Address: usm
+Payment: COD
+Total: RM 5.00
+Items:
+  - Product ID: CHIP01 (Qty: 1, Price: 5.00, Subtotal: 5.00)
+-------------------------
+
+--- FINAL ORDER #1766505056037 ---
+Date: Tue Dec 23 23:50:56 GMT+08:00 2025
+Name: nur irdina
+Phone: 0166973245
+Address: usm
+Payment: CC
+  Card #: 1234567891234567
+  Expiry: 12/06
+Total: RM 13.00
+Items:
+  - Product ID: OAT02 (Qty: 2, Price: 6.50, Subtotal: 13.00)
+-------------------------
+
+--- FINAL ORDER #1766506630648 ---
+Date: Wed Dec 24 00:17:10 GMT+08:00 2025
+Name: nur irdina
+Phone: 0166973245
+Address: usm
+Payment: QR
+Total: RM 6.50
+Items:
+  - Product ID: OAT02 (Qty: 1, Price: 6.50, Subtotal: 6.50)
+-------------------------
+

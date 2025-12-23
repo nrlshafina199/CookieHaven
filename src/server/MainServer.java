@@ -12,7 +12,7 @@ import server.model.*;
 
 public class MainServer {
     private static final Map<String, ShoppingCart> SESSIONS = new ConcurrentHashMap<>();
-    private static final String SESSION_COOKIE_KEY = "SESSION_ID";
+    private static final String SESSION_COOKIE_KEY = "AUTH_SESSION";
 
     public static void main(String[] args) throws Exception {
         // Initialize sample products if database is empty
@@ -39,11 +39,12 @@ public class MainServer {
         server.createContext("/admin", new AdminHandler());
         server.createContext("/api/cart", new CartAPIServlet());
         server.createContext("/checkout", new CheckoutHandler());
+        server.createContext("/api/place-order", new CheckoutHandler());
         server.createContext("/cart.html", new CartPageHandler());
         server.createContext("/", new StaticFileHandler());
         server.createContext("/api", new AuthHandler());
 
-        // Inside public static void main(String[] args)
+
         AuthHandler authHandler = new AuthHandler();
         server.createContext("/api/register", authHandler);
         server.createContext("/api/login", authHandler);
@@ -54,6 +55,8 @@ public class MainServer {
         server.createContext("/my_profile.html", new StaticFileHandler());
         server.createContext("/order_history.html", new StaticFileHandler());
         server.createContext("/order_detail.html", new StaticFileHandler());
+        server.createContext("/privacy.html", new StaticFileHandler());
+        server.createContext("/terms.html", new StaticFileHandler());
 
         server.setExecutor(null);
         server.start();
@@ -84,16 +87,21 @@ public class MainServer {
     }
 
     private static String getSid(HttpExchange ex) {
+        // 1. Look for the existing cookie header
         String cookie = ex.getRequestHeaders().getFirst("Cookie");
-        if (cookie != null && cookie.contains(SESSION_COOKIE_KEY + "=")) {
-            String[] parts = cookie.split(SESSION_COOKIE_KEY + "=");
-            if (parts.length > 1) {
-                return parts[1].split(";")[0];
+
+        if (cookie != null) {
+            String[] cookies = cookie.split(";");
+            for (String c : cookies) {
+                String[] parts = c.trim().split("=");
+                // 2. Use "AUTH_SESSION" to match your AuthHandler
+                if (parts.length == 2 && parts[0].equals("AUTH_SESSION")) {
+                    return parts[1];
+                }
             }
         }
-        String id = UUID.randomUUID().toString();
-        ex.getResponseHeaders().add("Set-Cookie", SESSION_COOKIE_KEY + "=" + id + "; Path=/; HttpOnly");
-        return id;
+        // 3. DO NOT generate a new UUID here; return null if not logged in
+        return null;
     }
 
     public static Map<String, String> parse(String body) {
