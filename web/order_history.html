@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Order History | CookieHaven</title>
+    <style>
+        :root { --primary: #5d4037; --accent: #8d6e63; --bg: #f8f1e7; --white: #ffffff; }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); margin: 0; display: flex; }
+
+        .sidebar { width: 250px; background: var(--primary); height: 100vh; color: white; padding: 20px; box-sizing: border-box; position: fixed; }
+        .sidebar a { display: block; color: #d7ccc8; text-decoration: none; padding: 12px; margin: 8px 0; border-radius: 5px; }
+        .sidebar a:hover, .sidebar a.active { background: var(--accent); color: white; }
+
+        /* FIX: Increased padding to 60px to push content away from the edge */
+        .main-content {
+            margin-left: 250px;
+            width: calc(100% - 250px);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            box-sizing: border-box;
+        }
+
+        .content-body {
+            padding: 60px; /* Increased from 40px for better layout */
+            flex: 1;
+        }
+
+        h1 { margin-bottom: 30px; color: var(--primary); }
+
+        table { width: 100%; border-collapse: collapse; background: var(--white); border-radius: 10px; overflow: hidden; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+        th, td { padding: 18px; text-align: left; border-bottom: 1px solid #eee; }
+        th { background: var(--accent); color: white; text-transform: uppercase; font-size: 14px; }
+
+        .status-badge { padding: 6px 14px; border-radius: 15px; font-weight: bold; font-size: 12px; display: inline-block; }
+        .status-pending { background: #fff3cd; color: #856404; }
+        .status-delivered { background: #d4edda; color: #155724; }
+
+        /* Footer matching Home Page */
+        footer {
+            background: var(--primary);
+            color: white;
+            padding: 40px;
+            text-align: center;
+            width: 100%;
+            box-sizing: border-box;
+        }
+    </style>
+</head>
+<body>
+
+<div class="sidebar">
+    <h2>CookieHaven</h2>
+    <a href="order.html">🏠 Home / Shop</a>
+    <a href="my_profile.html">👤 My Profile</a>
+    <a href="order_history.html" class="active">📋 Order History</a>
+    <a href="/logout" style="color: #ffab91; margin-top: 50px; font-weight: bold;">🚪 Logout</a>
+</div>
+
+<div class="main-content">
+    <div class="content-body">
+        <h1>Your Order History</h1>
+        <table>
+            <thead>
+            <tr>
+                <th>Order ID</th>
+                <th>Date</th>
+                <th>Total (RM)</th>
+                <th>Status</th>
+            </tr>
+            </thead>
+            <tbody id="order-table-body">
+            <tr><td colspan="4" style="text-align:center;">Loading your delicious history...</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <footer>
+        <p>&copy; 2025 CookieHaven Bakery | <a href="privacy.html" style="color: #d7ccc8; text-decoration: none;">Privacy Policy (PDPA Compliance)</a> | <a href="#" style="color: #d7ccc8; text-decoration: none;">Terms of Service</a></p>
+        <p style="font-size: 12px; color: #8d6e63; margin-top: 10px;">We process your name and email only for order fulfillment.</p>
+    </footer>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", async () => {
+        const loadOrders = async () => {
+            try {
+                const res = await fetch("/api/user-orders");
+                if (res.ok) {
+                    const orders = await res.json();
+                    const tbody = document.getElementById("order-table-body");
+
+                    if (orders.length === 0) {
+                        tbody.innerHTML = '<tr><td colspan="4" style="text-align:center; padding: 40px;">No orders found yet! Browse our shop to place your first order.</td></tr>';
+                        return;
+                    }
+
+                    tbody.innerHTML = orders.map(order => `
+                        <tr>
+                            <td><strong>#${order.id}</strong></td>
+                            <td>${order.date}</td>
+                            <td>RM ${parseFloat(order.total).toFixed(2)}</td>
+                            <td><span class="status-badge status-${order.status.toLowerCase()}">${order.status}</span></td>
+                        </tr>
+                    `).join('');
+                } else {
+                    window.location.href = "login.html";
+                }
+            } catch (e) {
+                console.error("Error:", e);
+                document.getElementById("order-table-body").innerHTML = '<tr><td colspan="4" style="text-align:center; color:red;">Error loading history. Please refresh.</td></tr>';
+            }
+        };
+
+        loadOrders();
+    });
+</script>
+</body>
+</html>

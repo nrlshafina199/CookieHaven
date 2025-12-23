@@ -34,11 +34,26 @@ public class MainServer {
         HttpServer server = HttpServer.create(new InetSocketAddress(8080), 0);
 
         // Register handlers
+        AdminHandler adminHandler = new AdminHandler();
+        server.createContext("/admin/products/api", adminHandler);
+        server.createContext("/admin", new AdminHandler());
         server.createContext("/api/cart", new CartAPIServlet());
         server.createContext("/checkout", new CheckoutHandler());
-        server.createContext("/admin", new AdminHandler());
         server.createContext("/cart.html", new CartPageHandler());
         server.createContext("/", new StaticFileHandler());
+        server.createContext("/api", new AuthHandler());
+
+        // Inside public static void main(String[] args)
+        AuthHandler authHandler = new AuthHandler();
+        server.createContext("/api/register", authHandler);
+        server.createContext("/api/login", authHandler);
+        server.createContext("/logout", authHandler);
+
+        server.createContext("/login.html", new StaticFileHandler());
+        server.createContext("/register.html", new StaticFileHandler());
+        server.createContext("/my_profile.html", new StaticFileHandler());
+        server.createContext("/order_history.html", new StaticFileHandler());
+        server.createContext("/order_detail.html", new StaticFileHandler());
 
         server.setExecutor(null);
         server.start();
@@ -104,36 +119,49 @@ public class MainServer {
         @Override
         public void handle(HttpExchange ex) throws IOException {
             String path = ex.getRequestURI().getPath();
-            if (path.equals("/")) path = "/order.html";
 
-            try {
-                byte[] data = readFile("web" + path);
+            // Default to order.html if path is empty
+            if (path.equals("/") || path.isEmpty()) {
+                path = "/order.html";
+            }
 
-                String type = "text/html; charset=UTF-8";
-                if (path.endsWith(".css")) {
-                    type = "text/css; charset=UTF-8";
-                } else if (path.endsWith(".js")) {
-                    type = "application/javascript; charset=UTF-8";
-                } else if (path.endsWith(".jpg") || path.endsWith(".jpeg")) {
-                    type = "image/jpeg";
-                } else if (path.endsWith(".png")) {
-                    type = "image/png";
-                } else if (path.endsWith(".gif")) {
-                    type = "image/gif";
+            File file = new File("web" + path);
+
+            // Check if file exists and is NOT a directory to prevent errors
+            if (file.exists() && !file.isDirectory()) {
+                try {
+                    byte[] data = readFile("web" + path);
+                    String type = getMimeType(path);
+
+                    ex.getResponseHeaders().add("Content-Type", type);
+                    // Add Security Header: Prevent clickjacking (Realistic requirement)
+                    ex.getResponseHeaders().add("X-Frame-Options", "DENY");
+
+                    ex.sendResponseHeaders(200, data.length);
+                    ex.getResponseBody().write(data);
+                } catch (Exception e) {
+                    sendError(ex, 500, "Internal Server Error");
                 }
-
-                ex.getResponseHeaders().add("Content-Type", type);
-                ex.sendResponseHeaders(200, data.length);
-                ex.getResponseBody().write(data);
-
-            } catch (FileNotFoundException e) {
-                String err = "404 Not Found: " + path;
-                byte[] errBytes = err.getBytes(StandardCharsets.UTF_8);
-                ex.getResponseHeaders().add("Content-Type", "text/plain; charset=UTF-8");
-                ex.sendResponseHeaders(404, errBytes.length);
-                ex.getResponseBody().write(errBytes);
+            } else {
+                sendError(ex, 404, "404 Not Found: " + path);
             }
             ex.close();
+        }
+
+        // Helper to determine File Type
+        private String getMimeType(String path) {
+            if (path.endsWith(".css")) return "text/css; charset=UTF-8";
+            if (path.endsWith(".js")) return "application/javascript; charset=UTF-8";
+            if (path.endsWith(".jpg") || path.endsWith(".jpeg")) return "image/jpeg";
+            if (path.endsWith(".png")) return "image/png";
+            if (path.endsWith(".gif")) return "image/gif";
+            return "text/html; charset=UTF-8";
+        }
+
+        private void sendError(HttpExchange ex, int code, String msg) throws IOException {
+            byte[] response = msg.getBytes(StandardCharsets.UTF_8);
+            ex.sendResponseHeaders(code, response.length);
+            ex.getResponseBody().write(response);
         }
     }
 }

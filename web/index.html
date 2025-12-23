@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>CookieHaven | Premium Freshly Baked Cookies</title>
+    <style>
+        :root { --primary: #5d4037; --accent: #8d6e63; --bg: #f8f1e7; }
+        body { font-family: 'Segoe UI', sans-serif; margin: 0; color: var(--primary); background: var(--bg); }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('https://images.unsplash.com/photo-1499636136210-6f4ee915583e?q=80&w=1000');
+            background-size: cover; background-position: center; height: 60vh;
+            display: flex; flex-direction: column; justify-content: center; align-items: center; color: white; text-align: center;
+        }
+        .hero h1 { font-size: 3.5rem; margin: 0; }
+        .cta-btn { background: var(--primary); color: white; padding: 15px 30px; text-decoration: none; border-radius: 30px; font-weight: bold; margin-top: 20px; transition: 0.3s; }
+        .cta-btn:hover { background: var(--accent); }
+
+        /* Navigation Bar */
+        header { background: var(--primary); padding: 15px 40px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 1000; }
+        header a { color: white; text-decoration: none; margin-left: 20px; font-weight: 500; }
+
+        /* Content Sections */
+        section { padding: 60px 10%; text-align: center; }
+        .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: center; text-align: left; }
+        .feature-card { background: white; padding: 30px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+    </style>
+</head>
+<body>
+
+<header>
+    <h2 style="color: white; margin: 0;">🍪 CookieHaven</h2>
+    <nav>
+        <a href="index.html">Home</a>
+        <a href="order.html">Shop Cookies</a>
+        <a href="register.html">Register</a>
+        <a href="login.html">Login</a>
+    </nav>
+</header>
+
+<div class="hero">
+    <h1>Baking Happiness Daily</h1>
+    <p>Freshly baked, premium ingredients, delivered to your doorstep.</p>
+    <a href="order.html" class="cta-btn">Order Now</a>
+</div>
+
+<section id="story">
+    <div class="about-grid">
+        <div>
+            <h2>Our Story</h2>
+            <p>Founded in 2025, CookieHaven started with a simple secret family recipe. We believe that cookies aren't just snacks—they are moments of joy. Every batch is handmade using 100% Belgian chocolate and organic flour.</p>
+        </div>
+        <img src="https://images.unsplash.com/photo-1558961363-fa8fdf82db35?q=80&w=500" alt="Baking" style="width: 100%; border-radius: 15px;">
+    </div>
+</section>
+
+<section style="background: white;">
+    <h2>Why Choose Us?</h2>
+    <div style="display: flex; gap: 20px; justify-content: center; margin-top: 30px;">
+        <div class="feature-card"><h3>Freshly Baked</h3><p>Baked every morning, shipped the same day.</p></div>
+        <div class="feature-card"><h3>Premium Only</h3><p>No preservatives, only pure butter and chocolate.</p></div>
+        <div class="feature-card"><h3>Fast Delivery</h3><p>Warm cookies at your doorstep within 24 hours.</p></div>
+    </div>
+</section>
+
+<footer style="background: var(--primary); color: white; padding: 40px; text-align: center;">
+    <p>&copy; 2025 CookieHaven Co. | CAT201 Project</p>
+</footer>
+
+</body>
+</html>
