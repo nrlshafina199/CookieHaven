@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Order Details | CookieHaven</title>
+    <style>
+        :root {<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Order Detail | CookieHaven</title>
+    <style>
+        :root { --primary: #5d4037; --accent: #8d6e63; --bg: #f8f1e7; --white: #ffffff; }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); margin: 0; display: flex; }
+        .main-content { margin-left: 250px; padding: 40px; width: 100%; }
+        .detail-card { background: var(--white); padding: 30px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); max-width: 600px; }
+        .status-badge { padding: 8px 16px; border-radius: 20px; font-weight: bold; }
+        .pending { background: #fff3cd; color: #856404; }
+        .delivered { background: #d4edda; color: #155724; }
+    </style>
+</head>
+<body>
+<div class="main-content">
+    <h1>Order Details</h1>
+    <div class="detail-card" id="detail-container">
+        <p>Loading details...</p>
+    </div>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", async () => {
+        const urlParams = new URLSearchParams(window.location.search);
+        const orderId = urlParams.get('id'); // Get ID from URL like order_detail.html?id=1001
+
+        // Mock detail fetch logic - in a real site, you'd fetch from another /api endpoint
+        document.getElementById('detail-container').innerHTML = `
+            <h3>Order #${orderId}</h3>
+            <p>Status: <span class="status-badge delivered">Delivered</span></p>
+            <hr>
+            <div style="display: flex; justify-content: space-between;">
+                <span>Classic Choco Chip x 3</span>
+                <span>RM 15.00</span>
+            </div>
+            <h2 style="text-align: right;">Total: RM 15.00</h2>
+        `;
+    });
+</script>
+</body>
+</html>
+            --primary: #5d4037;
+            --accent: #8d6e63;
+            --bg: #f8f1e7;
+            --white: #ffffff;
+        }
+
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background-color: var(--bg);
+            margin: 0;
+            display: flex;
+        }
+
+        .sidebar {
+            width: 250px;
+            background: var(--primary);
+            height: 100vh;
+            color: white;
+            padding: 20px;
+            position: fixed;
+        }
+
+        .sidebar a {
+            display: block;
+            color: #d7ccc8;
+            text-decoration: none;
+            padding: 12px;
+            margin: 8px 0;
+            border-radius: 5px;
+        }
+
+        .main-content {
+            margin-left: 250px;
+            padding: 40px;
+            width: 100%;
+        }
+
+        .detail-card {
+            background: var(--white);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+
+        .item-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .status-badge {
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        /* Status color coding [cite: 14] */
+        .pending { background: #fff3e0; color: #e65100; }
+        .delivered { background: #e8f5e9; color: #2e7d32; }
+    </style>
+</head>
+<body>
+
+<div class="sidebar">
+    <h2>CookieHaven</h2>
+    <a href="/order.html">🏠 Shop</a>
+    <a href="/my_profile.html">👤 My Profile</a>
+    <a href="/order_history.html">📋 Order History</a>
+</div>
+
+<div class="main-content">
+    <h1>Order Details #1001</h1>
+    <div class="detail-card">
+        <p><strong>Status:</strong> <span class="status-badge pending">Pending</span></p>
+        <p><strong>Date:</strong> 2025-12-22</p>
+        <hr>
+        <div class="item-row">
+            <span>Classic Choco Chip x2</span>
+            <span>RM 10.00</span>
+        </div>
+        <div class="item-row">
+            <span>Peanut Butter Delight x1</span>
+            <span>RM 7.00</span>
+        </div>
+        <div style="text-align: right; margin-top: 20px;">
+            <h3>Total: RM 17.00</h3>
+        </div>
+    </div>
+</div>
+
+<footer style="background: var(--primary); color: white; padding: 40px; text-align: center; clear: both; margin-top: 50px; border-radius: 15px;">
+    <p>&copy; 2025 CookieHaven Bakery | <a href="privacy.html" style="color: #d7ccc8;">Privacy Policy (PDPA Compliance)</a></p>
+    <p style="font-size: 12px; opacity: 0.8;">We process your name and email only for order fulfillment.</p>
+</footer>
+
+</body>
+</html>

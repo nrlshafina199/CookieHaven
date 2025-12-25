@@ -6,11 +6,10 @@
     <title>Checkout | CookieHaven</title>
     <link rel="stylesheet" href="style.css">
     <script>
-        // Optional: Toggles visibility of the Credit Card fields based on payment selection
+        // Toggles visibility of the Credit Card fields based on payment selection
         function togglePaymentForm() {
             const ccFields = document.getElementById('credit-card-fields');
             const paymentMethod = document.querySelector('input[name="paymentMethod"]:checked').value;
-            // Ensure fields are required only when CC is selected
             const inputs = ccFields.querySelectorAll('input');
 
             if (paymentMethod === 'CC') {
@@ -20,14 +19,55 @@
                 ccFields.style.display = 'none';
                 inputs.forEach(input => input.removeAttribute('required'));
             }
-            updatePlaceOrderButton(); // Call to update button state
+            updatePlaceOrderButton(); // Update button state after toggle
         }
 
-        // New: Enable/disable button based on checkbox
+        // Enables/disables the button based on the agreement checkbox
         function updatePlaceOrderButton() {
-            const agreementCheckbox = document.getElementById('agreement');
             const placeOrderBtn = document.getElementById('placeOrderBtn');
-            placeOrderBtn.disabled = !agreementCheckbox.checked;
+            // Button is now always active so users can trigger the validation alert
+            placeOrderBtn.disabled = false;
+        }
+
+        // Processes the order submission with validation
+        async function placeOrder() {
+            // 1. Get input values by their Element IDs
+            const fullName = document.getElementById('name').value.trim();
+            const address = document.getElementById('address').value.trim();
+            const phone = document.getElementById('phone').value.trim();
+            const agreement = document.getElementById('agreement').checked;
+
+            // 2. Validation Check (Notifications will trigger here)
+            if (!fullName || !address || !phone) {
+                alert("Please fill in all delivery details before placing your order! 📋");
+                return;
+            }
+
+            if (!agreement) {
+                alert("Please agree to the data processing terms to proceed. ✅");
+                return;
+            }
+
+            // 3. Send data to the Java CheckoutHandler
+            try {
+                const formData = new URLSearchParams(new FormData(document.getElementById('checkout-form')));
+
+                const response = await fetch("/api/place-order", {
+                    method: "POST",
+                    body: formData
+                });
+
+                if (response.ok) {
+                    // Success Notification
+                    alert("Order placed successfully! 🍪");
+                    window.location.href = "order_history.html";
+                }else {
+                    // This will tell us if the server sent an error (404, 500, etc.)
+                    alert("Server Error: " + response.status + ". Check MainServer.java!");
+                }
+            } catch (error) {
+                console.error("Order failed:", error);
+            }
         }
     </script>
 </head>
@@ -35,7 +75,7 @@
 <header><h1>Checkout & Payment</h1></header>
 
 <main>
-    <form action="/checkout" method="POST" id="checkout-form">
+    <form id="checkout-form">
 
         <h2>1. Delivery Address</h2>
         <label for="name">Full Name:</label>
@@ -76,7 +116,6 @@
             </label>
         </fieldset>
 
-        <!-- NEW: REQUIRED AGREEMENT CHECKBOX -->
         <div style="margin: 30px 0; padding: 15px; background: #f5f0eb; border-radius: 10px; border-left: 5px solid #5d4037;">
             <label>
                 <input type="checkbox" id="agreement" required onchange="updatePlaceOrderButton()">
@@ -85,8 +124,9 @@
             </label>
         </div>
 
-        <button type="submit" id="placeOrderBtn" style="margin-top: 20px; padding: 10px 30px; background: #5d4037; color: white; border: none; border-radius: 50px; cursor: pointer; font-size: 16px; transition: all 0.3s;" disabled>
-            Place Order (RM TOTAL_PLACEHOLDER)
+        <button type="button" id="placeOrderBtn" onclick="placeOrder()"
+                style="margin-top: 20px; padding: 10px 30px; background: #5d4037; color: white; border: none; border-radius: 50px; cursor: pointer; font-size: 16px; transition: all 0.3s;" >
+            Place Order
         </button>
 
     </form>

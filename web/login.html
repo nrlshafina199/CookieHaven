@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Login | CookieHaven</title>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+        :root { --primary: #5d4037; --accent: #8d6e63; --bg: #f8f1e7; }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        .card { background: white; padding: 40px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); width: 350px; text-align: center; }
+        h2 { color: var(--primary); }
+        input { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 5px; box-sizing: border-box; }
+        .btn { width: 100%; background: var(--primary); color: white; padding: 12px; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; }
+        .btn:hover { background: var(--accent); }
+    </style>
+</head>
+<body>
+<div class="card">
+    <h2 style="margin-top: 0;">👤 Customer Login</h2>
+    <p style="color: var(--accent);">Welcome back, Cookie Lover!</p>
+
+    <form id="loginForm">
+        <input type="text" name="username" placeholder="Username" required>
+        <input type="password" name="password" placeholder="Password" required>
+        <button type="submit" class="btn">Login</button>
+
+        <div style="margin-top: 15px; text-align: center;">
+            <a href="javascript:void(0)" onclick="handleForgotPassword()"
+               style="color: #8d6e63; font-size: 0.9em; text-decoration: none;">
+                Forgot Password?
+            </a>
+        </div>
+    </form>
+
+    <p style="font-size: 14px; margin-top: 20px;">Don't have an account? <a href="register.html" style="color: var(--accent);">Sign up</a></p>
+    <p><a href="order.html" style="font-size: 14px; color: var(--primary); text-decoration: none;">🏠 Back to Home</a></p>
+</div>
+
+<script>
+    const loginForm = document.getElementById('loginForm');
+
+    loginForm.onsubmit = async (e) => {
+        e.preventDefault();
+        const formData = new FormData(loginForm);
+        const params = new URLSearchParams(formData);
+
+        try {
+            const res = await fetch('/api/login', { method: 'POST', body: params });
+
+            if (res.ok) {
+                window.location.href = "my_profile.html";
+            } else {
+                // CHANGED: Professional error popup
+                Swal.fire({ title: 'Error', text: 'Invalid username or password!', icon: 'error', confirmButtonColor: '#5d4037' });
+            }
+        } catch (err) {
+            console.error("Login error:", err);
+            Swal.fire('Error', 'Server error. Please try again.', 'error');
+        }
+    };
+
+    // ADD THIS HERE: The reset password function
+    async function handleForgotPassword() {
+        const { value: email } = await Swal.fire({
+            title: 'Reset Password',
+            input: 'email',
+            inputLabel: 'Enter your registered email address',
+            inputPlaceholder: 'email@example.com',
+            confirmButtonColor: '#5d4037',
+            showCancelButton: true
+        });
+
+        if (email) {
+            const res = await fetch("/api/forgot-password?email=" + email);
+            if (res.ok) {
+                Swal.fire({ title: 'Success', text: 'If the email exists, a reset link has been simulated!', icon: 'success', confirmButtonColor: '#5d4037' });
+            } else {
+                Swal.fire({ title: 'Error', text: 'Email not found in our records.', icon: 'error', confirmButtonColor: '#5d4037' });
+            }
+        }
+    }
+</script>
+</body>
+</html>

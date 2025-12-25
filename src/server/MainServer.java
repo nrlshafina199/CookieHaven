@@ -12,7 +12,7 @@ import server.model.*;
 
 public class MainServer {
     private static final Map<String, ShoppingCart> SESSIONS = new ConcurrentHashMap<>();
-    private static final String SESSION_COOKIE_KEY = "SESSION_ID";
+    private static final String SESSION_COOKIE_KEY = "AUTH_SESSION";
 
     public static void main(String[] args) throws Exception {
         // Initialize sample products if database is empty
@@ -34,11 +34,29 @@ public class MainServer {
         HttpServer server = HttpServer.create(new InetSocketAddress(8080), 0);
 
         // Register handlers
+        AdminHandler adminHandler = new AdminHandler();
+        server.createContext("/admin/products/api", adminHandler);
+        server.createContext("/admin", new AdminHandler());
         server.createContext("/api/cart", new CartAPIServlet());
         server.createContext("/checkout", new CheckoutHandler());
-        server.createContext("/admin", new AdminHandler());
+        server.createContext("/api/place-order", new CheckoutHandler());
         server.createContext("/cart.html", new CartPageHandler());
         server.createContext("/", new StaticFileHandler());
+        server.createContext("/api", new AuthHandler());
+
+
+        AuthHandler authHandler = new AuthHandler();
+        server.createContext("/api/register", authHandler);
+        server.createContext("/api/login", authHandler);
+        server.createContext("/logout", authHandler);
+
+        server.createContext("/login.html", new StaticFileHandler());
+        server.createContext("/register.html", new StaticFileHandler());
+        server.createContext("/my_profile.html", new StaticFileHandler());
+        server.createContext("/order_history.html", new StaticFileHandler());
+        server.createContext("/order_detail.html", new StaticFileHandler());
+        server.createContext("/privacy.html", new StaticFileHandler());
+        server.createContext("/terms.html", new StaticFileHandler());
 
         server.setExecutor(null);
         server.start();
@@ -69,16 +87,21 @@ public class MainServer {
     }
 
     private static String getSid(HttpExchange ex) {
+        // 1. Look for the existing cookie header
         String cookie = ex.getRequestHeaders().getFirst("Cookie");
-        if (cookie != null && cookie.contains(SESSION_COOKIE_KEY + "=")) {
-            String[] parts = cookie.split(SESSION_COOKIE_KEY + "=");
-            if (parts.length > 1) {
-                return parts[1].split(";")[0];
+
+        if (cookie != null) {
+            String[] cookies = cookie.split(";");
+            for (String c : cookies) {
+                String[] parts = c.trim().split("=");
+                // 2. Use "AUTH_SESSION" to match your AuthHandler
+                if (parts.length == 2 && parts[0].equals("AUTH_SESSION")) {
+                    return parts[1];
+                }
             }
         }
-        String id = UUID.randomUUID().toString();
-        ex.getResponseHeaders().add("Set-Cookie", SESSION_COOKIE_KEY + "=" + id + "; Path=/; HttpOnly");
-        return id;
+        // 3. DO NOT generate a new UUID here; return null if not logged in
+        return null;
     }
 
     public static Map<String, String> parse(String body) {
@@ -104,36 +127,49 @@ public class MainServer {
         @Override
         public void handle(HttpExchange ex) throws IOException {
             String path = ex.getRequestURI().getPath();
-            if (path.equals("/")) path = "/order.html";
 
-            try {
-                byte[] data = readFile("web" + path);
+            // Default to order.html if path is empty
+            if (path.equals("/") || path.isEmpty()) {
+                path = "/order.html";
+            }
 
-                String type = "text/html; charset=UTF-8";
-                if (path.endsWith(".css")) {
-                    type = "text/css; charset=UTF-8";
-                } else if (path.endsWith(".js")) {
-                    type = "application/javascript; charset=UTF-8";
-                } else if (path.endsWith(".jpg") || path.endsWith(".jpeg")) {
-                    type = "image/jpeg";
-                } else if (path.endsWith(".png")) {
-                    type = "image/png";
-                } else if (path.endsWith(".gif")) {
-                    type = "image/gif";
+            File file = new File("web" + path);
+
+            // Check if file exists and is NOT a directory to prevent errors
+            if (file.exists() && !file.isDirectory()) {
+                try {
+                    byte[] data = readFile("web" + path);
+                    String type = getMimeType(path);
+
+                    ex.getResponseHeaders().add("Content-Type", type);
+                    // Add Security Header: Prevent clickjacking (Realistic requirement)
+                    ex.getResponseHeaders().add("X-Frame-Options", "DENY");
+
+                    ex.sendResponseHeaders(200, data.length);
+                    ex.getResponseBody().write(data);
+                } catch (Exception e) {
+                    sendError(ex, 500, "Internal Server Error");
                 }
-
-                ex.getResponseHeaders().add("Content-Type", type);
-                ex.sendResponseHeaders(200, data.length);
-                ex.getResponseBody().write(data);
-
-            } catch (FileNotFoundException e) {
-                String err = "404 Not Found: " + path;
-                byte[] errBytes = err.getBytes(StandardCharsets.UTF_8);
-                ex.getResponseHeaders().add("Content-Type", "text/plain; charset=UTF-8");
-                ex.sendResponseHeaders(404, errBytes.length);
-                ex.getResponseBody().write(errBytes);
+            } else {
+                sendError(ex, 404, "404 Not Found: " + path);
             }
             ex.close();
+        }
+
+        // Helper to determine File Type
+        private String getMimeType(String path) {
+            if (path.endsWith(".css")) return "text/css; charset=UTF-8";
+            if (path.endsWith(".js")) return "application/javascript; charset=UTF-8";
+            if (path.endsWith(".jpg") || path.endsWith(".jpeg")) return "image/jpeg";
+            if (path.endsWith(".png")) return "image/png";
+            if (path.endsWith(".gif")) return "image/gif";
+            return "text/html; charset=UTF-8";
+        }
+
+        private void sendError(HttpExchange ex, int code, String msg) throws IOException {
+            byte[] response = msg.getBytes(StandardCharsets.UTF_8);
+            ex.sendResponseHeaders(code, response.length);
+            ex.getResponseBody().write(response);
         }
     }
 }

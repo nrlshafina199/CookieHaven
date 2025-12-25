@@ -160,14 +160,3 @@ Items:
   - Product ID: PB03 (Qty: 1, Price: 7.00, Subtotal: 7.00)
 -------------------------
 
---- FINAL ORDER #1766412723584 ---
-Date: Mon Dec 22 22:12:03 GMT+08:00 2025
-Name: ARIN
-Phone: 0145624845
-Address: Universiti Sains Malaysia
-Payment: COD
-Total: RM 7.00
-Items:
-  - Product ID: PB03 (Qty: 1, Price: 7.00, Subtotal: 7.00)
--------------------------
-

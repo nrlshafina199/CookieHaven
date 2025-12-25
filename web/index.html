@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>CookieHaven | Home</title>
+    <style>
+        :root { --primary: #5d4037; --accent: #8d6e63; --bg: #f8f1e7; }
+        body { font-family: 'Segoe UI', sans-serif; margin: 0; display: flex; background: var(--bg); }
+
+        /* Sidebar styling to match your Profile page */
+        .sidebar { width: 250px; background: var(--primary); height: 100vh; color: white; padding: 20px; position: fixed; }
+        .sidebar h2 { margin-bottom: 30px; }
+        .sidebar a { display: block; color: #d7ccc8; text-decoration: none; padding: 12px; margin: 8px 0; border-radius: 5px; }
+        .sidebar a:hover { background: var(--accent); color: white; }
+
+        .main-content { margin-left: 250px; width: calc(100% - 250px); }
+
+        .hero {
+            background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('https://images.unsplash.com/photo-1499636136210-6f4ee915583e?q=80&w=1000');
+            background-size: cover; background-position: center; height: 60vh;
+            display: flex; flex-direction: column; justify-content: center; align-items: center; color: white; text-align: center;
+        }
+
+        /* THE GREETING STYLE */
+        #user-greeting { color: #ffccbc; font-size: 1.8rem; margin-bottom: 10px; min-height: 2rem; }
+    </style>
+</head>
+<body>
+
+<div class="sidebar">
+    <h2>CookieHaven</h2>
+    <a href="index.html">🏠 Home / Shop</a>
+    <a href="my_profile.html">👤 My Profile</a>
+    <a href="order_history.html">📋 Order History</a>
+    <a href="/logout" style="margin-top: 50px;">🚪 Logout</a>
+</div>
+
+<div class="main-content">
+    <div class="hero">
+        <h2 id="user-greeting"></h2>
+        <h1>Baking Happiness Daily</h1>
+        <p>Freshly baked, premium ingredients, delivered to your doorstep.</p>
+        <a href="order.html" style="background: var(--primary); color: white; padding: 15px 30px; text-decoration: none; border-radius: 30px; font-weight: bold; margin-top: 20px;">Order Now</a>
+    </div>
+
+    <section style="padding: 60px; text-align: center;">
+        <h2>Welcome to CookieHaven</h2>
+        <p>Since your Profile page works, the Home page will now show your name too!</p>
+    </section>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", async () => {
+        const greetingElement = document.getElementById("user-greeting");
+
+        try {
+            // Fetching data from the same API as your Profile page
+            const res = await fetch("/api/user-data");
+            if (res.ok) {
+                const data = await res.json();
+                if (data && data.username) {
+                    // Updating the text dynamically
+                    greetingElement.textContent = "Welcome back, " + data.username + "! 🍪";
+                }
+            }
+        } catch (err) {
+            console.error("Home page greeting failed:", err);
+        }
+    });
+</script>
+
+</body>
+</html>

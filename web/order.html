@@ -2,35 +2,75 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Cookie Catalog | CookieHaven</title>
+    <title>Home & Shop | CookieHaven</title>
     <style>
+        :root {
+            --primary: #5d4037;   /* Dark Chocolate */
+            --accent: #8d6e63;    /* Milk Chocolate */
+            --bg: #f8f1e7;        /* Cream/Cookie base */
+        }
+
         body {
             font-family: 'Segoe UI', sans-serif;
-            background: #f8f1e7;
-            color: #5d4037;
+            background: var(--bg);
+            color: var(--primary);
             margin: 0;
+            scroll-behavior: smooth;
         }
 
         header {
-            background: #5d4037;
+            background: var(--primary);
             color: white;
-            padding: 20px;
+            padding: 15px 40px;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)),
+                        url('https://images.unsplash.com/photo-1499636136210-6f4ee915583e?q=80&w=1000');
+            background-size: cover;
+            background-position: center;
+            height: 60vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            text-align: center;
+        }
+
+        .hero h2 { font-size: 3rem; margin: 0; }
+        .hero p { font-size: 1.2rem; margin: 15px 0; }
+
+        .about-section {
+            padding: 50px 10%;
+            background: white;
+            text-align: center;
+        }
+
+        /* Catalog Section */
+        .shop-header {
+            text-align: center;
+            padding: 40px 0 10px 0;
         }
 
         .product-grid {
             display: flex;
             flex-wrap: wrap;
             gap: 20px;
-            padding: 40px;
+            padding: 20px 40px 40px 40px;
             justify-content: center;
         }
 
         .product-card {
             background: white;
-            border: 2px solid #5d4037;
+            border: 2px solid var(--primary);
             border-radius: 15px;
             padding: 20px;
             width: 250px;
@@ -38,138 +78,165 @@
             box-shadow: 0 4px 8px rgba(0,0,0,0.1);
         }
 
-        .product-card img {
-            width: 100%;
-            height: 200px;
-            object-fit: cover;
-            border-radius: 10px;
-            margin-bottom: 15px;
-        }
+        .qty-controls { display: flex; justify-content: center; align-items: center; gap: 10px; margin: 15px 0; }
+        .qty-btn { background: var(--accent); color: white; border: none; width: 30px; height: 30px; cursor: pointer; border-radius: 5px; }
+        .qty-input { width: 50px; text-align: center; border: 1px solid var(--primary); border-radius: 5px; }
+        .add-btn { background: var(--primary); color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; width: 100%; font-weight: bold; }
 
-        .qty-controls {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 10px;
-            margin: 15px 0;
-        }
+        #cart-status { background: var(--accent); padding: 10px 20px; border-radius: 5px; color: white; text-decoration: none; }
+        .nav-links a { color: white; text-decoration: none; font-weight: bold; margin-left: 15px; }
 
-        .qty-btn {
-            background: #8d6e63;
-            color: white;
-            border: none;
-            width: 30px;
-            height: 30px;
-            cursor: pointer;
-            border-radius: 5px;
-            font-weight: bold;
-        }
-
-        .qty-input {
-            width: 50px;
-            text-align: center;
-            border: 1px solid #5d4037;
-            border-radius: 5px;
-            padding: 5px;
-        }
-
-        .add-btn {
-            background: #5d4037;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 5px;
-            cursor: pointer;
-            width: 100%;
-            font-weight: bold;
-        }
-
-        .add-btn:hover {
-            background: #3e2723;
-        }
-
-        #cart-status {
-            background: #8d6e63;
-            padding: 10px 20px;
-            border-radius: 5px;
-            color: white;
-            text-decoration: none;
-        }
-
-        #cart-status:hover {
-            background: #6d4c41;
-        }
-
-        .empty-message {
-            text-align: center;
-            padding: 60px;
-            font-size: 1.2em;
-            color: #8d6e63;
-        }
+        footer { background: var(--primary); color: white; padding: 40px; text-align: center; }
     </style>
 </head>
 <body>
 
 <header>
-    <h1>🍪 CookieHaven Catalog</h1>
+    <h2 style="margin: 0;">🍪 CookieHaven</h2>
+    <nav class="nav-links">
+        <a href="#home">🏠 Home</a>
+        <a href="#shop">🛍️ Shop</a>
+        <a href="/register.html">📝 Register</a>
+        <a href="/login.html">👤 Login</a>
+        <a href="/order_history.html">📋 My Orders</a>
+    </nav>
     <a href="/cart.html" id="cart-status">🛒 Cart (<span id="cart-count">0</span>)</a>
 </header>
 
-<main class="product-grid" id="product-container">
-    <div class="empty-message">Loading delicious cookies...</div>
-</main>
+<section id="home">
+    <div class="hero">
+        <h2>Baking Happiness Daily</h2>
+        <p>Premium ingredients for the perfect crunch.</p>
+        <a href="#shop" style="background: white; color: var(--primary); padding: 10px 25px; border-radius: 25px; text-decoration: none; font-weight: bold;">Browse Catalog</a>
+    </div>
+
+    <div class="about-section">
+        <h2>Our Story</h2>
+        <p>At CookieHaven, we believe the best cookies come from love and high-quality ingredients. Every batch is freshly baked daily to ensure you receive only the finest premium treats. From classic chocolate chip to unique custom flavors, we bake moments of joy just for you.</p>
+    </div>
+</section>
+
+<section id="shop">
+    <div class="shop-header">
+        <h2>🍪 Our Freshly Baked Menu</h2>
+        <p>Pick your favorites and we'll deliver them fresh!</p>
+    </div>
+    <main class="product-grid" id="product-container">
+        <div class="empty-message">Loading delicious cookies...</div>
+    </main>
+</section>
+
+<footer>
+    <p>
+        &copy; 2025 CookieHaven Bakery |
+        <a href="privacy.html" style="color: #d7ccc8; text-decoration: none;">Privacy Policy (PDPA Compliance)</a> |
+        <a href="terms.html" style="color: #d7ccc8; text-decoration: none;">Terms of Service</a>
+    </p>
+    <p style="font-size: 12px; color: #8d6e63; margin-top: 10px;">Your privacy matters to us.</p>
+</footer>
+
+<div id="cookie-notice" style="position: fixed; bottom: 20px; left: 20px; right: 20px; background: #333; color: white; padding: 20px; border-radius: 10px; display: none; z-index: 10000; box-shadow: 0 4px 15px rgba(0,0,0,0.3);">
+    <div style="display: flex; justify-content: space-between; align-items: center;">
+        <span>🍪 CookieHaven uses cookies to ensure you get the best experience (Login, Cart, Analytics).</span>
+        <button onclick="acceptCookies()" style="background: #8d6e63; border: none; color: white; padding: 8px 20px; cursor: pointer; border-radius: 5px; margin-left: 10px; font-weight: bold;">Accept</button>
+    </div>
+</div>
 
 <script>
     document.addEventListener("DOMContentLoaded", () => {
         loadProducts();
         updateCartCount();
+
+        if(!localStorage.getItem('cookieConsent')) {
+            document.getElementById('cookie-notice').style.display = 'block';
+        }
     });
 
     async function loadProducts() {
         const container = document.getElementById("product-container");
-
         try {
+            // Ensure this endpoint exists in your AdminProductHandler or MainServer
             const res = await fetch("/admin/products/api");
-
-            if (!res.ok) {
-                container.innerHTML = '<div class="empty-message">Failed to load products. Please try again.</div>';
-                return;
-            }
+            if (!res.ok) throw new Error("Server returned status: " + res.status);
 
             const products = await res.json();
-
             if (products.length === 0) {
-                container.innerHTML = '<div class="empty-message">No cookies available yet! Check back soon!</div>';
+                container.innerHTML = '<div>No cookies available!</div>';
                 return;
             }
 
             container.innerHTML = products.map(p => `
                 <div class="product-card">
                     <h3>${p.name}</h3>
-                    <p><i>${p.description}</i></p>
-                    <p style="font-size: 0.8em; color: #777;">
-                        <b>Contains:</b> ${p.allergens}<br>
-                        <b>Ingredients:</b> ${p.ingredients}
-                    </p>
-                    <p style="font-size: 1.3em; color: #d84315; font-weight: bold;">RM ${p.price.toFixed(2)}</p>
-                    <p>Stock: ${p.stock}</p>
-
+                    <p><i>${p.description || ''}</i></p>
+                    <div style="font-size: 0.8em; margin-bottom: 20px;">
+                        <strong>Contains:</strong> ${p.allergens || 'None'}<br>
+                        <strong>Ingredients:</strong> ${p.ingredients || 'Secret Recipe'}
+                    </div>
+                    <p style="font-size: 1.4em; color: #d84315; font-weight: bold;">RM ${(p.price || 0).toFixed(2)}</p>
+                    <div style="font-size: 0.75em; margin-bottom: 20px; color: ${p.stock < 10 ? '#d84315' : '#2e7d32'}; font-weight: bold;">
+                        Stock: ${p.stock ?? 0} ${p.stock < 10 ? '(Low Stock!)' : ''}
+                    </div>
                     <div class="qty-controls">
                         <button class="qty-btn" onclick="changeQty('${p.id}', -1)">−</button>
                         <input type="number" class="qty-input" id="qty_${p.id}" value="1" min="1" readonly>
                         <button class="qty-btn" onclick="changeQty('${p.id}', 1)">+</button>
                     </div>
-
                     <button class="add-btn" onclick="addToCart('${p.id}')">Add to Cart</button>
                 </div>
             `).join('');
-
         } catch (e) {
-            console.error("Failed to load catalog:", e);
-            container.innerHTML = '<div class="empty-message">Error loading catalog. Please refresh the page.</div>';
+            console.error("Catalog Error:", e);
+            container.innerHTML = '<div style="color:red;">Failed to load catalog. Is MainServer running?</div>';
         }
     }
 
+    async function addToCart(productId) {
+        const qtyInput = document.getElementById('qty_' + productId);
+        const qty = qtyInput.value;
+
+        try {
+            // 1. Prepare and send the request to CartAPIServlet
+            const params = new URLSearchParams();
+            params.append("action", "add");
+            params.append("productId", productId);
+            params.append("quantity", qty);
+
+            const res = await fetch("/api/cart", {
+                method: "POST",
+                body: params
+            });
+
+            // 2. Handle unauthorized access (User is not logged in)
+            if (res.status === 401) {
+                // Your custom alert message for guests
+                alert("Please login first to start shopping for cookies! 🍪");
+                window.location.href = "login.html";
+                return;
+            }
+
+            // 3. Handle successful response (Status 200)
+            if (res.ok) {
+                const data = await res.json();
+                if (data.success) {
+                    // Your custom success message
+                    alert("✓ Added to cart!");
+                    updateCartCount();
+                    qtyInput.value = 1;
+                }
+            } else {
+                // Handle other server errors (e.g., product not found)
+                const errorData = await res.json();
+                alert("Error: " + errorData.message);
+            }
+
+        } catch (e) {
+            console.error("Cart Error:", e);
+            // Fallback alert if the fetch request fails completely
+            alert("Hi! Please log in first to add items to your cart.");
+            window.location.href = "login.html";
+        }
+    }
     function changeQty(id, delta) {
         const input = document.getElementById('qty_' + id);
         let val = parseInt(input.value) + delta;
@@ -177,38 +244,13 @@
         input.value = val;
     }
 
-    async function addToCart(productId) {
-        const qtyInput = document.getElementById('qty_' + productId);
-        const qty = qtyInput.value;
-
-        const params = new URLSearchParams();
-        params.append("action", "add");
-        params.append("productId", productId);
-        params.append("quantity", qty);
-
-        try {
-            const res = await fetch("/api/cart", { method: "POST", body: params });
-            const data = await res.json();
-
-            if (data.success) {
-                alert("✓ Added to cart!");
-                updateCartCount();
-                qtyInput.value = 1; // Reset quantity
-            }
-        } catch (e) {
-            alert("Failed to add to cart. Please try again.");
-            console.error(e);
-        }
-    }
-
     async function updateCartCount() {
         try {
             const res = await fetch("/api/cart");
             const data = await res.json();
-            const countEl = document.getElementById("cart-count");
-            if (countEl) countEl.textContent = data.cartCount;
+            document.getElementById("cart-count").textContent = data.cartCount;
         } catch (e) {
-            console.error("Failed to update cart count:", e);
+            console.log("Cart empty or not logged in.");
         }
     }
 </script>
