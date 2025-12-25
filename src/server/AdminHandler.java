@@ -68,15 +68,12 @@ public class AdminHandler implements HttpHandler {
         byte[] htmlData = MainServer.readFile("web/admin_dashboard.html");
         List<Order> allOrders = OrderDatabase.getAllOrders();
 
-        // Calculate Today's Orders
         long todayCount = allOrders.stream()
                 .filter(o -> isToday(o.getOrderDate()))
                 .count();
 
-        // Calculate Total Sales
         double totalSales = allOrders.stream().mapToDouble(Order::getTotal).sum();
 
-        // Check Low Stock (less than 10)
         String lowStockNames = ProductDatabase.getAllProducts().stream()
                 .filter(p -> p.getStock() < 10)
                 .map(Product::getName)
@@ -92,7 +89,6 @@ public class AdminHandler implements HttpHandler {
         sendResponse(exchange, 200, "text/html", htmlStr.getBytes(StandardCharsets.UTF_8));
     }
 
-    // Helper method to check if date is today
     private boolean isToday(Date date) {
         SimpleDateFormat fmt = new SimpleDateFormat("yyyyMMdd");
         return fmt.format(date).equals(fmt.format(new Date()));

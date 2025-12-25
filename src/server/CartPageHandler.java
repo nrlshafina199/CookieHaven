@@ -18,14 +18,12 @@ public class CartPageHandler implements HttpHandler {
                     .append("<td>RM ").append(String.format("%.2f", item.getPrice())).append("</td>")
                     .append("<td>").append(item.getQuantity()).append("</td>")
                     .append("<td>RM ").append(String.format("%.2f", item.getSubtotal())).append("</td>")
-                    // This call here is what links to the JavaScript function
                     .append("<td><button type='button' onclick=\"removeItem('")
                     .append(item.getProductId())
                     .append("')\">Remove</button></td>")
                     .append("</tr>");
         }
 
-        // We use .replace to inject the rows and the total
         html = html.replace("<tbody id=\"cart-table-body\"></tbody>",
                 "<tbody id=\"cart-table-body\">" + rows.toString() + "</tbody>");
 

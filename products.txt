@@ -1,3 +1,4 @@
-CHIP01|Classic Choco Chip|5.0|99|Rich chocolate bits|Flour, Sugar, Butter|Dairy
-OAT02|Oatmeal Raisin|6.5|77|Chewy oats with raisins|Oats, Raisins|None
-PB03|Peanut Butter Delight|7.0|58|Smooth peanut butter cookies|Peanut Butter, Flour|Nuts
+CHIP01|Classic Choco Chip|5.0|99|Buttery, Soft Cookie Filled With Rich Chocolate Chips.|Flour, Sugar, Butter, Eggs, Chocolate Chips, Vanilla|Wheat (Gluten), Dairy, Eggs, Soy
+OAT02|Oatmeal Raisin|6.5|77|Soft And Chewy Cookie With Hearty Oats And Sweet Raisins.|Oats, Flour, Sugar, Butter, Eggs, Raisins, Cinnamon, Vanilla|Wheat (Gluten), Dairy, Eggs, Soy
+PB03|Peanut Butter Delight|7.0|58|Soft And Rich Cookie With Creamy Peanut Butter Flavor.|Flour, Sugar, Butter, Eggs, Peanut Butter, Vanilla|Peanuts, Wheat (Gluten), Dairy, Eggs, Soy
+RV02|Red Velvet Chocolate|8.0|56|Soft And Chewy Red Velvet Cookie With Rich Cocoa And Chocolate Chunks.|Flour, Sugar, Butter, Eggs, Cocoa Powder, Chocolate Chunks, Vanilla|Wheat (Gluten), Dairy Egg, Soy

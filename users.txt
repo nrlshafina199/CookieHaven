@@ -7,3 +7,4 @@ TESTING,nurirdiina@gmail.com,$2a$10$cp3Lwwu.pIvICksXKr7RyeHeplX0IFwwW3VSwSIQd8NI
 dina25,nurirdiina@gmail.com,$2a$10$fw0rpvm47pkKVTjCRZZAyOho0O70OFqEge8xy7F65stsgac19OTw6
 nelly,nurirdiina@gmail.com,$2a$10$2JfTZpgdQe9HbCYdiGb60OuHenfrK4weNHZzlLUhwfviVtiu7K/Ri
 test1,nurirdiina@gmail.com,$2a$10$EW/m69bEagSu0Xl1x3kPDuKci3meG3yKm9PozPCnZXdZCG7FM/k3W
+shafina,wonpildaisy@gmail.com,$2a$10$SfE206zJEtn7mK4Nx88PJ.7LHcumwhnBN84N6Pr6mJbL8pDh9Ozke

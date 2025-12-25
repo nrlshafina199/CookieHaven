@@ -15,25 +15,9 @@ public class MainServer {
     private static final String SESSION_COOKIE_KEY = "AUTH_SESSION";
 
     public static void main(String[] args) throws Exception {
-        // Initialize sample products if database is empty
-        if (ProductDatabase.getAllProducts().isEmpty()) {
-            ProductDatabase.addProduct(new Product(
-                    "CHIP01", "Classic Choco Chip", 5.00, 100,
-                    "Rich chocolate bits", "Flour, Sugar, Butter", "Dairy"
-            ));
-            ProductDatabase.addProduct(new Product(
-                    "OAT02", "Oatmeal Raisin", 6.50, 80,
-                    "Chewy oats with raisins", "Oats, Raisins", "None"
-            ));
-            ProductDatabase.addProduct(new Product(
-                    "PB03", "Peanut Butter Delight", 7.00, 60,
-                    "Smooth peanut butter cookies", "Peanut Butter, Flour", "Nuts"
-            ));
-        }
 
         HttpServer server = HttpServer.create(new InetSocketAddress(8080), 0);
 
-        // Register handlers
         AdminHandler adminHandler = new AdminHandler();
         server.createContext("/admin/products/api", adminHandler);
         server.createContext("/admin", new AdminHandler());
@@ -87,7 +71,6 @@ public class MainServer {
     }
 
     private static String getSid(HttpExchange ex) {
-        // 1. Look for the existing cookie header
         String cookie = ex.getRequestHeaders().getFirst("Cookie");
 
         if (cookie != null) {
@@ -100,7 +83,6 @@ public class MainServer {
                 }
             }
         }
-        // 3. DO NOT generate a new UUID here; return null if not logged in
         return null;
     }
 
@@ -128,21 +110,18 @@ public class MainServer {
         public void handle(HttpExchange ex) throws IOException {
             String path = ex.getRequestURI().getPath();
 
-            // Default to order.html if path is empty
             if (path.equals("/") || path.isEmpty()) {
                 path = "/order.html";
             }
 
             File file = new File("web" + path);
 
-            // Check if file exists and is NOT a directory to prevent errors
             if (file.exists() && !file.isDirectory()) {
                 try {
                     byte[] data = readFile("web" + path);
                     String type = getMimeType(path);
 
                     ex.getResponseHeaders().add("Content-Type", type);
-                    // Add Security Header: Prevent clickjacking (Realistic requirement)
                     ex.getResponseHeaders().add("X-Frame-Options", "DENY");
 
                     ex.sendResponseHeaders(200, data.length);
@@ -156,7 +135,6 @@ public class MainServer {
             ex.close();
         }
 
-        // Helper to determine File Type
         private String getMimeType(String path) {
             if (path.endsWith(".css")) return "text/css; charset=UTF-8";
             if (path.endsWith(".js")) return "application/javascript; charset=UTF-8";
