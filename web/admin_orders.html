@@ -3,47 +3,221 @@
 <head>
     <meta charset="UTF-8">
     <title>Manage Orders | Admin</title>
-    <link rel="stylesheet" href="admin_style.css">
+    <style>
+        :root {
+            --primary: #5d4037; --accent: #8d6e63; --bg: #f8f1e7; --white: #ffffff;
+            --text-dark: #3e2723; --success: #2e7d32; --warning: #f57f17;
+        }
+        body { font-family: 'Segoe UI', sans-serif; margin: 0; display: flex; height: 100vh; background: var(--bg); color: var(--text-dark); }
+
+        /* SIDEBAR */
+        .sidebar { width: 260px; background: var(--primary); color: var(--white); display: flex; flex-direction: column; padding: 20px; box-shadow: 4px 0 10px rgba(0,0,0,0.1); }
+        .sidebar h2 { margin-bottom: 40px; font-size: 1.5rem; border-bottom: 1px solid var(--accent); padding-bottom: 15px; }
+        .sidebar a { text-decoration: none; color: #d7ccc8; padding: 15px; margin-bottom: 8px; border-radius: 8px; transition: 0.3s; display: flex; align-items: center; }
+        .sidebar a:hover { background: rgba(255, 255, 255, 0.1); color: var(--white); }
+        .sidebar a.active { background: var(--accent); color: var(--white); font-weight: bold; }
+        .sidebar a span { margin-right: 12px; }
+
+        /* CONTENT */
+        .content { flex: 1; padding: 40px; overflow-y: auto; }
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
+        .btn-refresh { background: var(--primary); color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; font-weight: bold; }
+
+        /* TABLE */
+        table { width: 100%; border-collapse: collapse; background: white; border-radius: 10px; overflow: hidden; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+        thead { background: var(--primary); color: white; }
+        th, td { padding: 15px 20px; text-align: left; border-bottom: 1px solid #eee; }
+        tr:hover { background-color: #fafafa; }
+
+        /* BADGES */
+        .status-badge { padding: 5px 12px; border-radius: 20px; font-size: 0.85em; font-weight: bold; text-transform: uppercase; }
+        .status-paid { background: #e8f5e9; color: var(--success); }
+        .status-pending { background: #fff8e1; color: var(--warning); }
+        .status-shipped { background: #e3f2fd; color: #1565c0; }
+        .status-cancelled { background: #ffebee; color: #c62828; }
+
+        /* --- MODAL (POPUP) STYLES --- */
+        .modal {
+            display: none; /* Hidden by default */
+            position: fixed; z-index: 1000; left: 0; top: 0;
+            width: 100%; height: 100%;
+            background-color: rgba(0,0,0,0.5); /* Black w/ opacity */
+            justify-content: center; align-items: center;
+        }
+        .modal-content {
+            background-color: #fff; padding: 30px; border-radius: 10px;
+            width: 400px; box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            text-align: center;
+        }
+        .modal h3 { color: var(--primary); margin-top: 0; }
+        .item-list { text-align: left; margin: 20px 0; background: #fafafa; padding: 15px; border-radius: 5px; max-height: 150px; overflow-y: auto; }
+        .item-row { display: flex; justify-content: space-between; border-bottom: 1px solid #eee; padding: 5px 0; }
+
+        select { padding: 10px; width: 100%; margin-top: 10px; border-radius: 5px; border: 1px solid #ccc; font-size: 1em; }
+
+        .modal-actions { margin-top: 20px; display: flex; gap: 10px; justify-content: center; }
+        .btn-save { background: var(--success); color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; width: 100%; }
+        .btn-close { background: #ccc; color: black; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; }
+    </style>
 </head>
 <body>
-<header><h1>Incoming Orders</h1><nav><a href="/admin/dashboard">Back</a></nav></header>
-<main>
+
+<div class="sidebar">
+    <h2>CookieHaven</h2>
+    <a href="/admin/dashboard"><span>📊</span> Dashboard</a>
+    <a href="/admin/products"><span>🍪</span> Manage Products</a>
+    <a href="/admin/orders" class="active"><span>📦</span> View Orders</a>
+    <a href="/admin/reviews"><span>⭐</span> Customer Feedback</a>
+    <a href="/admin/reports"><span>📈</span> Sales Reports</a>
+    <a href="/admin/logout"><span>🚪</span> Logout</a>
+</div>
+
+<div class="content">
+    <div class="header">
+        <h1>Incoming Orders</h1>
+        <button class="btn-refresh" onclick="loadOrders()">Refresh List</button>
+    </div>
+
     <table>
         <thead>
         <tr>
-            <th>ID</th>
+            <th>Order ID</th>
             <th>Customer</th>
             <th>Total</th>
             <th>Status</th>
             <th>Action</th>
         </tr>
         </thead>
-        <tbody id="orderTableBody"></tbody>
+        <tbody id="orders-table-body"></tbody>
     </table>
-</main>
+</div>
+
+<div id="orderModal" class="modal">
+    <div class="modal-content">
+        <h3>Update Order Status</h3>
+        <p id="modal-order-id" style="color: #777; font-size: 0.9em;">Order #...</p>
+
+        <div class="item-list" id="modal-items">
+        </div>
+
+        <label style="display:block; text-align:left; font-weight:bold; margin-top:15px;">Set Status:</label>
+        <select id="modal-status-select">
+            <option value="PENDING">Pending (Payment Recieved)</option>
+            <option value="PREPARING">Preparing / Baking</option>
+            <option value="SHIPPED">Shipped</option>
+            <option value="DELIVERED">Delivered</option>
+            <option value="CANCELLED">Cancelled</option>
+        </select>
+
+        <div class="modal-actions">
+            <button class="btn-close" onclick="closeModal()">Cancel</button>
+            <button class="btn-save" onclick="saveStatus()">Update Status</button>
+        </div>
+    </div>
+</div>
+
 <script>
-    fetch('/admin/orders').then(r => r.json()).then(orders => {
-        const body = document.getElementById('orderTableBody');
-        body.innerHTML = orders.map(o => `
+    let currentOrders = [];
+    let selectedOrderId = null;
+
+    document.addEventListener("DOMContentLoaded", loadOrders);
+
+    async function loadOrders() {
+        const tbody = document.getElementById("orders-table-body");
+        tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;">Loading orders...</td></tr>';
+
+        try {
+            const res = await fetch("/admin/orders/api");
+            if (!res.ok) throw new Error("Failed");
+
+            currentOrders = await res.json(); // Save to global variable
+
+            if (currentOrders.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; padding:20px;">No orders found.</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = currentOrders.map(o => `
                 <tr>
                     <td>#${o.orderId}</td>
-                    <td>${o.customerName}<br><small>${o.phone}</small></td>
-                    <td>RM ${o.total.toFixed(2)}</td>
-                    <td><span class="status-${o.status.toLowerCase()}">${o.status}</span></td>
+                    <td><strong>${o.customerName}</strong></td>
+                    <td style="color:#d84315; font-weight:bold;">RM ${o.total.toFixed(2)}</td>
+                    <td><span class="status-badge ${getStatusClass(o.status)}">${o.status}</span></td>
                     <td>
-                        <button onclick="updateStatus(${o.orderId}, 'Shipped')">Mark Shipped</button>
+                        <button onclick="openModal(${o.orderId})" style="cursor:pointer; padding:6px 15px; border:1px solid #ccc; border-radius:5px; background:white; font-weight:bold;">View</button>
                     </td>
                 </tr>
             `).join('');
-    });
 
-    async function updateStatus(id, status) {
-        await fetch(`/admin/orders/${id}/status`, {
-            method: 'POST',
-            body: new URLSearchParams({status: status})
-        });
-        location.reload();
+        } catch (e) {
+            console.error(e);
+            tbody.innerHTML = '<tr><td colspan="5" style="color:red; text-align:center;">Error loading orders.</td></tr>';
+        }
+    }
+
+    function openModal(id) {
+        const order = currentOrders.find(o => o.orderId === id);
+        if(!order) return;
+
+        selectedOrderId = id;
+        document.getElementById("modal-order-id").innerText = "Order #" + id;
+        document.getElementById("modal-status-select").value = order.status;
+
+        // Show items
+        const itemsContainer = document.getElementById("modal-items");
+        if(order.items && order.items.length > 0) {
+            itemsContainer.innerHTML = order.items.map(i => `
+                <div class="item-row">
+                    <span>${i.name}</span>
+                    <strong>x${i.qty}</strong>
+                </div>
+            `).join('');
+        } else {
+            itemsContainer.innerHTML = "<p>No item details available.</p>";
+        }
+
+        document.getElementById("orderModal").style.display = "flex";
+    }
+
+    function closeModal() {
+        document.getElementById("orderModal").style.display = "none";
+    }
+
+    async function saveStatus() {
+        const newStatus = document.getElementById("modal-status-select").value;
+
+        try {
+            const params = new URLSearchParams();
+            params.append("orderId", selectedOrderId);
+            params.append("status", newStatus);
+
+            const res = await fetch("/admin/orders/api", {
+                method: "POST",
+                body: params
+            });
+
+            if(res.ok) {
+                alert("Order updated!");
+                closeModal();
+                loadOrders(); // Refresh table
+            } else {
+                alert("Failed to update.");
+            }
+        } catch(e) {
+            console.error(e);
+            alert("Error connecting to server.");
+        }
+    }
+
+    function getStatusClass(status) {
+        if (!status) return '';
+        const s = status.toLowerCase();
+        if (s.includes('deliver') || s.includes('shipped')) return 'status-shipped';
+        if (s.includes('prepar')) return 'status-paid'; /* Greenish for preparing */
+        if (s.includes('cancel')) return 'status-cancelled';
+        return 'status-pending';
     }
 </script>
+
 </body>
 </html>

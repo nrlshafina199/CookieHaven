@@ -15,8 +15,10 @@ public class Order implements Serializable {
     protected final String ccExpiry;
     protected final List<CartItem> items;
     protected final double total;
-    protected final String status;
     protected final Date orderDate;
+
+    // --- FIX 1: Removed 'final' so we can update it later ---
+    protected String status;
 
     public Order(long orderId, String customerName, String phone, String address,
                  String paymentMethod, String ccNumber, String ccExpiry,
@@ -34,18 +36,23 @@ public class Order implements Serializable {
         this.orderDate = new Date();
     }
 
-    // --- GETTERS (Fixed: All symbols now exist) ---
+    // --- GETTERS ---
     public long getOrderId() { return orderId; }
     public String getCustomerName() { return customerName; }
     public String getPhone() { return phone; }
     public String getAddress() { return address; }
     public String getPaymentMethod() { return paymentMethod; }
-    public String getCcNumber() { return ccNumber; } // This fixes your error
-    public String getCcExpiry() { return ccExpiry; } // Added for safety
+    public String getCcNumber() { return ccNumber; }
+    public String getCcExpiry() { return ccExpiry; }
     public List<CartItem> getItems() { return items; }
     public double getTotal() { return total; }
     public String getStatus() { return status; }
     public Date getOrderDate() { return orderDate; }
+
+    // --- FIX 2: Added the missing Setter ---
+    public void setStatus(String status) {
+        this.status = status;
+    }
 
     public String toText() {
         return String.format("ID: %d | Customer: %s | Total: RM %.2f | Status: %s | Phone: %s\n",
