@@ -4,69 +4,79 @@ import java.io.*;
 import java.util.*;
 
 public class ProductDatabase {
-    private static final Map<String, Product> products = new LinkedHashMap<>();
+
     private static final String FILE_PATH = "products.txt";
+    private static final List<Product> products = new ArrayList<>();
 
     static {
-        loadFromFile();
+        loadProducts();
+    }
+
+    public static List<Product> getAllProducts() { return products; }
+
+    public static Product getProductById(String id) {
+        return products.stream().filter(p -> p.getId().equals(id)).findFirst().orElse(null);
     }
 
     public static void addProduct(Product p) {
-        products.put(p.getId(), p);
-        saveToFile(); // Saves immediately to disk
+        products.add(p);
+        saveProducts();
     }
 
     public static void deleteProduct(String id) {
-        products.remove(id);
-        saveToFile();
+        products.removeIf(p -> p.getId().equals(id));
+        saveProducts();
     }
 
-    public static void reduceStock(String id, int qty) {
-        Product p = products.get(id);
-        if (p != null) {
-            int currentStock = p.getStock();
-            int newStock = Math.max(0, currentStock - qty);
-
-            // Re-create the product with new stock value
-            Product updated = new Product(p.getId(), p.getName(), p.getPrice(),
-                    newStock, p.getDescription(),
-                    p.getIngredients(), p.getAllergens());
-            products.put(id, updated);
-            saveToFile();
+    public static void reduceStock(String productId, int quantityPurchased) {
+        for (Product p : products) {
+            if (p.getId().equals(productId)) {
+                int newStock = p.getStock() - quantityPurchased;
+                if (newStock < 0) newStock = 0;
+                p.setStock(newStock);
+                saveProducts();
+                break;
+            }
         }
     }
 
-    public static List<Product> getAllProducts() {
-        return new ArrayList<>(products.values());
-    }
-
-    public static Product getProductById(String id) {
-        return products.get(id);
-    }
-
-    private static void saveToFile() {
-        try (PrintWriter out = new PrintWriter(new FileWriter(FILE_PATH))) {
-            for (Product p : products.values()) {
-                // Save ALL 7 fields separated by |
-                out.println(p.getId() + "|" + p.getName() + "|" + p.getPrice() + "|" +
-                        p.getStock() + "|" + p.getDescription() + "|" +
-                        p.getIngredients() + "|" + p.getAllergens());
+    private static void saveProducts() {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_PATH))) {
+            for (Product p : products) {
+                // We add the IMAGE at the end of the line
+                String line = String.format("%s|%s|%.2f|%d|%s|%s|%s|%s",
+                        p.getId(), p.getName(), p.getPrice(), p.getStock(),
+                        p.getDescription(), p.getIngredients(), p.getAllergens(), p.getImage());
+                writer.write(line);
+                writer.newLine();
             }
-        } catch (IOException e) { e.printStackTrace(); }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
-    private static void loadFromFile() {
+    private static void loadProducts() {
         File file = new File(FILE_PATH);
         if (!file.exists()) return;
-        try (BufferedReader br = new BufferedReader(new FileReader(file))) {
+
+        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
             String line;
-            while ((line = br.readLine()) != null) {
-                String[] f = line.split("\\|");
-                if (f.length >= 7) { // Corrected check
-                    products.put(f[0], new Product(f[0], f[1], Double.parseDouble(f[2]),
-                            Integer.parseInt(f[3]), f[4], f[5], f[6]));
+            while ((line = reader.readLine()) != null) {
+                String[] parts = line.split("\\|");
+
+                // If line has 8 parts, it includes the Image.
+                // If it has 7 parts, it's an old product (use "none").
+                if (parts.length >= 7) {
+                    String img = (parts.length >= 8) ? parts[7] : "none";
+
+                    products.add(new Product(
+                            parts[0], parts[1], Double.parseDouble(parts[2]),
+                            Integer.parseInt(parts[3]), parts[4], parts[5], parts[6], img
+                    ));
                 }
             }
-        } catch (IOException e) { e.printStackTrace(); }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

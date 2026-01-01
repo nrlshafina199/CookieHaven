@@ -4,116 +4,109 @@
     <meta charset="UTF-8">
     <title>Order History | CookieHaven</title>
     <style>
-        :root { --primary: #5d4037; --accent: #8d6e63; --bg: #f8f1e7; --white: #ffffff; }
-        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); margin: 0; display: flex; }
+        :root { --primary: #5d4037; --accent: #8d6e63; --bg: #f8f1e7; }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--primary); margin: 0; display: flex; }
 
-        .sidebar { width: 250px; background: var(--primary); height: 100vh; color: white; padding: 20px; box-sizing: border-box; position: fixed; }
-        .sidebar a { display: block; color: #d7ccc8; text-decoration: none; padding: 12px; margin: 8px 0; border-radius: 5px; }
-        .sidebar a:hover, .sidebar a.active { background: var(--accent); color: white; }
+        /* SIDEBAR (Matches your theme) */
+        .sidebar { width: 250px; background: var(--primary); color: white; height: 100vh; display: flex; flex-direction: column; padding: 20px; box-sizing: border-box; }
+        .sidebar h2 { margin-bottom: 40px; }
+        .sidebar a { color: #d7ccc8; text-decoration: none; padding: 15px; margin-bottom: 5px; display: block; border-radius: 5px; }
+        .sidebar a:hover { background: rgba(255,255,255,0.1); color: white; }
+        .sidebar a.active { background: var(--accent); color: white; font-weight: bold; }
 
-        /* FIX: Increased padding to 60px to push content away from the edge */
-        .main-content {
-            margin-left: 250px;
-            width: calc(100% - 250px);
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
-            box-sizing: border-box;
-        }
+        /* MAIN CONTENT */
+        .main { flex: 1; padding: 40px; overflow-y: auto; }
 
-        .content-body {
-            padding: 60px; /* Increased from 40px for better layout */
-            flex: 1;
-        }
+        table { width: 100%; border-collapse: collapse; background: white; border-radius: 10px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.05); margin-top: 20px; }
+        thead { background: var(--primary); color: white; }
+        th, td { padding: 15px; text-align: left; border-bottom: 1px solid #eee; }
 
-        h1 { margin-bottom: 30px; color: var(--primary); }
-
-        table { width: 100%; border-collapse: collapse; background: var(--white); border-radius: 10px; overflow: hidden; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
-        th, td { padding: 18px; text-align: left; border-bottom: 1px solid #eee; }
-        th { background: var(--accent); color: white; text-transform: uppercase; font-size: 14px; }
-
-        .status-badge { padding: 6px 14px; border-radius: 15px; font-weight: bold; font-size: 12px; display: inline-block; }
-        .status-pending { background: #fff3cd; color: #856404; }
-        .status-delivered { background: #d4edda; color: #155724; }
-
-        /* Footer matching Home Page */
-        footer {
-            background: var(--primary);
-            color: white;
-            padding: 40px;
-            text-align: center;
-            width: 100%;
-            box-sizing: border-box;
-        }
+        .badge { padding: 5px 12px; border-radius: 15px; font-size: 0.85em; font-weight: bold; }
+        .badge-pending { background: #fff3e0; color: #ef6c00; }
+        .badge-preparing { background: #e3f2fd; color: #1565c0; }
+        .badge-shipped { background: #e8f5e9; color: #2e7d32; }
+        .badge-delivered { background: #2e7d32; color: white; }
     </style>
 </head>
 <body>
 
 <div class="sidebar">
     <h2>CookieHaven</h2>
-    <a href="order.html">🏠 Home / Shop</a>
-    <a href="my_profile.html">👤 My Profile</a>
-    <a href="order_history.html" class="active">📋 Order History</a>
-    <a href="/logout" style="color: #ffab91; margin-top: 50px; font-weight: bold;">🚪 Logout</a>
+    <a href="/order.html">🏠 Home / Shop</a>
+    <a href="/my_profile.html">👤 My Profile</a>
+    <a href="/order_history.html" class="active">📄 Order History</a>
+    <a href="/logout" style="margin-top: auto; color: #ef9a9a;">🚪 Logout</a>
 </div>
 
-<div class="main-content">
-    <div class="content-body">
-        <h1>Your Order History</h1>
-        <table>
-            <thead>
-            <tr>
-                <th>Order ID</th>
-                <th>Date</th>
-                <th>Total (RM)</th>
-                <th>Status</th>
-            </tr>
-            </thead>
-            <tbody id="order-table-body">
-            <tr><td colspan="4" style="text-align:center;">Loading your delicious history...</td></tr>
-            </tbody>
-        </table>
-    </div>
+<div class="main">
+    <h1>Your Order History</h1>
+    <p>Track your delicious deliveries here.</p>
 
-    <footer>
-        <p>&copy; 2025 CookieHaven Bakery | <a href="privacy.html" style="color: #d7ccc8; text-decoration: none;">Privacy Policy (PDPA Compliance)</a> | <a href="#" style="color: #d7ccc8; text-decoration: none;">Terms of Service</a></p>
-        <p style="font-size: 12px; color: #8d6e63; margin-top: 10px;">We process your name and email only for order fulfillment.</p>
-    </footer>
+    <table>
+        <thead>
+        <tr>
+            <th>Order ID</th>
+            <th>Date</th>
+            <th>Total (RM)</th>
+            <th>Status</th>
+        </tr>
+        </thead>
+        <tbody id="history-body">
+        <tr><td colspan="4">Loading orders...</td></tr>
+        </tbody>
+    </table>
 </div>
 
 <script>
     document.addEventListener("DOMContentLoaded", async () => {
-        const loadOrders = async () => {
-            try {
-                const res = await fetch("/api/user-orders");
-                if (res.ok) {
-                    const orders = await res.json();
-                    const tbody = document.getElementById("order-table-body");
+        // 1. Get current user (Assuming you store username in localStorage on login)
+        // If you use cookies only, we might need a different way, but this is standard for simple apps.
+        const currentUser = localStorage.getItem("username");
 
-                    if (orders.length === 0) {
-                        tbody.innerHTML = '<tr><td colspan="4" style="text-align:center; padding: 40px;">No orders found yet! Browse our shop to place your first order.</td></tr>';
-                        return;
-                    }
+        if (!currentUser) {
+            document.getElementById("history-body").innerHTML =
+                '<tr><td colspan="4">Please <a href="login.html">Login</a> to view history.</td></tr>';
+            return;
+        }
 
-                    tbody.innerHTML = orders.map(order => `
-                        <tr>
-                            <td><strong>#${order.id}</strong></td>
-                            <td>${order.date}</td>
-                            <td>RM ${parseFloat(order.total).toFixed(2)}</td>
-                            <td><span class="status-badge status-${order.status.toLowerCase()}">${order.status}</span></td>
-                        </tr>
-                    `).join('');
-                } else {
-                    window.location.href = "login.html";
-                }
-            } catch (e) {
-                console.error("Error:", e);
-                document.getElementById("order-table-body").innerHTML = '<tr><td colspan="4" style="text-align:center; color:red;">Error loading history. Please refresh.</td></tr>';
+        try {
+            // 2. Ask Server for REAL data
+            const res = await fetch(`/api/history?user=${currentUser}`);
+            const orders = await res.json();
+
+            const tbody = document.getElementById("history-body");
+
+            if (orders.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="4">No orders found. Time to buy some cookies! 🍪</td></tr>';
+                return;
             }
-        };
 
-        loadOrders();
+            // 3. Render the fresh list
+            tbody.innerHTML = orders.map(o => `
+                <tr>
+                    <td><strong>#${o.id}</strong></td>
+                    <td>${new Date(o.date).toLocaleDateString()}</td>
+                    <td>RM ${o.total.toFixed(2)}</td>
+                    <td><span class="badge ${getBadgeClass(o.status)}">${o.status}</span></td>
+                </tr>
+            `).join('');
+
+        } catch (e) {
+            console.error(e);
+            document.getElementById("history-body").innerHTML = '<tr><td colspan="4" style="color:red">Error connecting to server.</td></tr>';
+        }
     });
+
+    function getBadgeClass(status) {
+        if(!status) return '';
+        const s = status.toLowerCase();
+        if(s.includes('pending')) return 'badge-pending';
+        if(s.includes('prepar')) return 'badge-preparing';
+        if(s.includes('ship')) return 'badge-shipped';
+        if(s.includes('deliver')) return 'badge-delivered';
+        return '';
+    }
 </script>
+
 </body>
 </html>

@@ -1,70 +1,59 @@
-// script.js
-
 document.addEventListener("DOMContentLoaded", () => {
-    loadProducts();
+    // Try to load the admin view (if we are on the admin page)
+    if (document.getElementById("product-container")) {
+        loadAdminProducts();
+    }
+
+    // Try to load the customer view (if we are on the shop page)
+    if (document.getElementById("product-grid")) {
+        loadCatalog();
+    }
+
     updateCartCount();
+
+    // Fix for the Accept Button
+    const acceptBtn = document.querySelector(".cookie-consent button");
+    if(acceptBtn) {
+        acceptBtn.addEventListener("click", () => {
+            document.querySelector(".cookie-consent").style.display = "none";
+        });
+    }
 });
 
-async function loadProducts() {
+// --- ADMIN PAGE FUNCTION ---
+async function loadAdminProducts() {
     const container = document.getElementById("product-container");
     if (!container) return;
 
     try {
-        const res = await fetch("/admin/products");
+        const res = await fetch("/admin/products/api");
+        if (!res.ok) throw new Error("Failed to load");
         const products = await res.json();
 
         container.innerHTML = products.map(p => `
             <div class="product-card" style="border:2px solid #5d4037; padding:20px; margin:10px; background:white; border-radius:10px;">
                 <h3>${p.name}</h3>
                 <p>RM ${p.price.toFixed(2)}</p>
-                <div style="margin-bottom:10px;">
-                    <button onclick="changeQty('${p.id}', -1)">-</button>
-                    <input type="number" id="qty_${p.id}" value="1" min="1" style="width:40px; text-align:center;" readonly>
-                    <button onclick="changeQty('${p.id}', 1)">+</button>
-                </div>
-                <button onclick="addToCart('${p.id}')" style="background:#5d4037; color:white; border:none; padding:10px; cursor:pointer;">Add to Cart</button>
+                <p>Stock: ${p.stock}</p>
             </div>
         `).join('');
-    } catch (e) { console.error("Menu failed to load", e); }
+    } catch (e) { console.error("Admin menu failed", e); }
 }
 
-function changeQty(id, delta) {
-    const input = document.getElementById('qty_' + id);
-    let val = parseInt(input.value) + delta;
-    if (val < 1) val = 1;
-    input.value = val;
-}
-
-function addToCart(productId) {
-    const qty = document.getElementById('qty_' + productId).value;
-    const params = new URLSearchParams();
-    params.append("action", "add");
-    params.append("productId", productId);
-    params.append("quantity", qty);
-
-    fetch("/api/cart", { method: "POST", body: params })
-        .then(res => res.json())
-        .then(data => {
-            alert("Added!");
-            const countEl = document.getElementById("cart-count");
-            if (countEl) countEl.textContent = data.cartCount;
-        });
-}
-
-function updateCartCount() {
-    fetch("/api/cart")
-        .then(res => res.json())
-        .then(data => {
-            const countEl = document.getElementById("cart-count");
-            if (countEl) countEl.textContent = data.cartCount;
-        });
-}
+// --- CUSTOMER SHOP FUNCTION ---
 async function loadCatalog() {
-    const container = document.getElementById("product-grid"); // Check this ID in order.html!
+    const container = document.getElementById("product-grid");
     if (!container) return;
 
     try {
         const res = await fetch('/admin/products/api');
+
+        // Error handling for visual feedback
+        if (!res.ok) {
+            container.innerHTML = "<p style='color:red'>Error loading catalog. Is the server running?</p>";
+            return;
+        }
+
         const products = await res.json();
 
         if (products.length === 0) {
@@ -84,5 +73,26 @@ async function loadCatalog() {
     }
 }
 
-// Call it when page loads
-document.addEventListener("DOMContentLoaded", loadCatalog);
+function addToCart(productId) {
+    const params = new URLSearchParams();
+    params.append("action", "add");
+    params.append("productId", productId);
+    params.append("quantity", 1);
+
+    fetch("/api/cart", { method: "POST", body: params })
+        .then(res => res.json())
+        .then(data => {
+            alert("Added to cart!");
+            updateCartCount();
+        });
+}
+
+function updateCartCount() {
+    fetch("/api/cart")
+        .then(res => res.json())
+        .then(data => {
+            const countEl = document.getElementById("cart-count");
+            if (countEl) countEl.textContent = data.cartCount || 0;
+        })
+        .catch(e => console.log("Cart not loaded yet"));
+}

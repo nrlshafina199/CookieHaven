@@ -48,9 +48,15 @@
             const res = await fetch('/api/login', { method: 'POST', body: params });
 
             if (res.ok) {
-                window.location.href = "my_profile.html";
+                // --- THIS IS THE FIX ---
+                // We capture the username you typed and save it to the browser's memory.
+                const username = formData.get('username');
+                localStorage.setItem("username", username);
+                // -----------------------
+
+                // Redirect to shop (or profile)
+                window.location.href = "order.html";
             } else {
-                // CHANGED: Professional error popup
                 Swal.fire({ title: 'Error', text: 'Invalid username or password!', icon: 'error', confirmButtonColor: '#5d4037' });
             }
         } catch (err) {
@@ -59,7 +65,6 @@
         }
     };
 
-    // ADD THIS HERE: The reset password function
     async function handleForgotPassword() {
         const { value: email } = await Swal.fire({
             title: 'Reset Password',
@@ -71,12 +76,10 @@
         });
 
         if (email) {
+            // This is just a simulation since we don't have a real email server
             const res = await fetch("/api/forgot-password?email=" + email);
-            if (res.ok) {
-                Swal.fire({ title: 'Success', text: 'If the email exists, a reset link has been simulated!', icon: 'success', confirmButtonColor: '#5d4037' });
-            } else {
-                Swal.fire({ title: 'Error', text: 'Email not found in our records.', icon: 'error', confirmButtonColor: '#5d4037' });
-            }
+            // We show success regardless to prevent email enumeration (security best practice)
+            Swal.fire({ title: 'Success', text: 'If the email exists, a reset link has been simulated!', icon: 'success', confirmButtonColor: '#5d4037' });
         }
     }
 </script>

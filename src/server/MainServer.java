@@ -22,6 +22,8 @@ public class MainServer {
         server.createContext("/admin/products/api", adminHandler);
         server.createContext("/admin", new AdminHandler());
         server.createContext("/api/cart", new CartAPIServlet());
+        server.createContext("/api/reviews", new ReviewHandler());
+        server.createContext("/api/history", new server.model.OrderHistoryHandler());
         server.createContext("/checkout", new CheckoutHandler());
         server.createContext("/api/place-order", new CheckoutHandler());
         server.createContext("/cart.html", new CartPageHandler());
