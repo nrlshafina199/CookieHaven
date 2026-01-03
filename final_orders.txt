@@ -1,5 +1,5 @@
 --- FINAL ORDER #1766330320810 ---
-Date: Sun Dec 21 23:18:40 GMT+08:00 2025
+Date: Mon Dec 21 23:18:40 GMT+08:00 1970
 Name: ARIN
 Phone: 0145624845
 Address: Universiti Sains Malaysia
@@ -10,7 +10,7 @@ Items:
 -------------------------
 
 --- FINAL ORDER #1766411573859 ---
-Date: Mon Dec 22 21:52:53 GMT+08:00 2025
+Date: Tue Dec 22 21:52:53 GMT+08:00 1970
 Name: jiha
 Phone: 0174582770
 Address: 44 KG SEBERANG PAYA, MUKIM LENGKUAS, BUKIT PINANG
@@ -23,7 +23,7 @@ Items:
 -------------------------
 
 --- FINAL ORDER #1766411930205 ---
-Date: Mon Dec 22 21:58:50 GMT+08:00 2025
+Date: Tue Dec 22 21:58:50 GMT+08:00 1970
 Name: jiha
 Phone: 0124598677
 Address: usm
@@ -36,7 +36,7 @@ Items:
 -------------------------
 
 --- FINAL ORDER #1767418359317 ---
-Date: Sat Jan 03 13:32:39 GMT+08:00 2026
+Date: Sat Jan 03 13:32:39 GMT+08:00 1970
 Name: farah
 Phone: 01155662615
 Address: usm
@@ -44,5 +44,16 @@ Payment: COD
 Total: RM 5.00
 Items:
   - Product ID: CHIP01 (Qty: 1, Price: 5.00, Subtotal: 5.00)
+-------------------------
+
+--- FINAL ORDER #1767469082624 ---
+Date: Sun Jan 04 03:38:02 GMT+08:00 2026
+Name: farah
+Phone: 01155662615
+Address: usm
+Payment: COD
+Total: RM 8.00
+Items:
+  - Product ID: RV02 (Qty: 1, Price: 8.00, Subtotal: 8.00)
 -------------------------
 
