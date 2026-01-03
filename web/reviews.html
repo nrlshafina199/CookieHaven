@@ -118,13 +118,6 @@
             margin-bottom: 10px;
         }
 
-        .user-name {
-            font-weight: bold;
-            font-size: 0.9em;
-            color: #777;
-            margin-top: 10px;
-        }
-
         .review-img-preview {
             width: 100%;
             height: 150px;
@@ -154,17 +147,13 @@
 <div class="container">
     <h1 style="text-align:center;">Customer Love 🍪</h1>
 
-    <!-- REVIEW FORM -->
     <div class="review-form">
         <h3>Write a Review</h3>
 
         <div class="form-group">
             <label>Which Cookie?</label>
             <select id="product">
-                <option>Classic Choco Chip</option>
-                <option>Oatmeal Raisin</option>
-                <option>Peanut Butter</option>
-                <option>Red Velvet</option>
+                <option value="" disabled selected>Loading cookies...</option>
             </select>
         </div>
 
@@ -192,7 +181,6 @@
         <button onclick="submitReview()">Submit Review</button>
     </div>
 
-    <!-- FILTER -->
     <div class="filter-bar">
         <span>Showing reviews</span>
         <select id="filter" onchange="loadReviews()">
@@ -205,7 +193,6 @@
         </select>
     </div>
 
-    <!-- REVIEWS -->
     <div class="review-grid" id="reviewsList">
         <p style="grid-column:1/-1;text-align:center;">Loading reviews...</p>
     </div>
@@ -216,11 +203,40 @@
 </footer>
 
 <script>
+    // 1. POPULATE DROPDOWN FROM ADMIN DATABASE
+    async function loadProducts() {
+        const productDropdown = document.getElementById("product");
+
+        try {
+            const res = await fetch("/admin/products/api");
+            const products = await res.json();
+
+            // Clear the "Loading..." message
+            productDropdown.innerHTML = '<option value="" disabled selected>Select a cookie...</option>';
+
+            products.forEach(p => {
+                const opt = document.createElement("option");
+                opt.value = p.name; // Matches the 'name' property from your Java backend
+                opt.textContent = p.name;
+                productDropdown.appendChild(opt);
+            });
+        } catch (e) {
+            console.error("Error loading products:", e);
+            productDropdown.innerHTML = '<option value="" disabled>Error loading cookies</option>';
+        }
+    }
+
+    // 2. SUBMIT REVIEW
     async function submitReview() {
         const product = document.getElementById("product").value;
         const rating = document.getElementById("rating").value;
         const text = document.getElementById("text").value;
         const file = document.getElementById("photo").files[0];
+
+        if (!product) {
+            alert("Please select a cookie to review.");
+            return;
+        }
 
         if (!text.trim()) {
             alert("Please write a review.");
@@ -242,25 +258,38 @@
         params.append("comment", text);
         params.append("image", image);
 
-        await fetch("/api/reviews", {
-            method: "POST",
-            body: params
-        });
+        try {
+            await fetch("/api/reviews", {
+                method: "POST",
+                body: params
+            });
 
-        alert("Review posted!");
-        document.getElementById("text").value = "";
-        document.getElementById("photo").value = "";
+            alert("Review posted!");
+            // Reset form fields
+            document.getElementById("product").selectedIndex = 0;
+            document.getElementById("text").value = "";
+            document.getElementById("photo").value = "";
 
-        loadReviews();
+            loadReviews();
+        } catch (e) {
+            alert("Error submitting review.");
+        }
     }
 
+    // 3. LOAD ALL REVIEWS
     async function loadReviews() {
         const container = document.getElementById("reviewsList");
+        const filterValue = document.getElementById("filter").value;
         container.innerHTML = "<p>Loading reviews...</p>";
 
         try {
             const res = await fetch("/api/reviews");
-            const reviews = await res.json();
+            let reviews = await res.json();
+
+            // Apply rating filter if selected
+            if (filterValue !== "all") {
+                reviews = reviews.filter(r => r.rating == filterValue);
+            }
 
             if (reviews.length === 0) {
                 container.innerHTML = "<p>No reviews yet.</p>";
@@ -282,6 +311,7 @@
         }
     }
 
+    // 4. HELPER: CONVERT IMAGE TO BASE64
     const toBase64 = file => new Promise((resolve, reject) => {
         const reader = new FileReader();
         reader.readAsDataURL(file);
@@ -289,9 +319,10 @@
         reader.onerror = reject;
     });
 
+    // INITIALIZE PAGE
+    loadProducts();
     loadReviews();
 </script>
-
 
 </body>
 </html>
