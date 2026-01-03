@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Order Confirmed</title>
+    <style>
+        body { font-family: sans-serif; text-align: center; padding: 50px; background: #f8f1e7; }
+        .box { background: white; padding: 30px; display: inline-block; border-radius: 10px; border: 2px solid #5d4037; }
+    </style>
+</head>
+<body>
+<div class="box">
+    <h1>✔ Order Successful!</h1>
+    <p>Order ID: <strong id="order-id"></strong></p>
+    <p>Your cookies are being prepared.</p>
+    <a href="/order.html">Back to Shop</a>
+</div>
+
+<script>
+    // Reads the ?id=... from the URL
+    const params = new URLSearchParams(window.location.search);
+    document.getElementById('order-id').textContent = params.get('id');
+</script>
+</body>
+</html>

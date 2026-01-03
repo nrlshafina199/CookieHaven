@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout | CookieHaven</title>
+    <link rel="stylesheet" href="style.css">
+    <script>
+        // Toggles visibility of the Credit Card fields based on payment selection
+        function togglePaymentForm() {
+            const ccFields = document.getElementById('credit-card-fields');
+            const paymentMethod = document.querySelector('input[name="paymentMethod"]:checked').value;
+            const inputs = ccFields.querySelectorAll('input');
+
+            if (paymentMethod === 'CC') {
+                ccFields.style.display = 'block';
+                inputs.forEach(input => input.setAttribute('required', 'required'));
+            } else {
+                ccFields.style.display = 'none';
+                inputs.forEach(input => input.removeAttribute('required'));
+            }
+            updatePlaceOrderButton(); // Update button state after toggle
+        }
+
+        // Enables/disables the button based on the agreement checkbox
+        function updatePlaceOrderButton() {
+            const placeOrderBtn = document.getElementById('placeOrderBtn');
+            // Button is now always active so users can trigger the validation alert
+            placeOrderBtn.disabled = false;
+        }
+
+        // Processes the order submission with validation
+        async function placeOrder() {
+            // 1. Get input values by their Element IDs
+            const fullName = document.getElementById('name').value.trim();
+            const address = document.getElementById('address').value.trim();
+            const phone = document.getElementById('phone').value.trim();
+            const agreement = document.getElementById('agreement').checked;
+
+            // 2. Validation Check (Notifications will trigger here)
+            if (!fullName || !address || !phone) {
+                alert("Please fill in all delivery details before placing your order! 📋");
+                return;
+            }
+
+            if (!agreement) {
+                alert("Please agree to the data processing terms to proceed. ✅");
+                return;
+            }
+
+            // 3. Send data to the Java CheckoutHandler
+            try {
+                const formData = new URLSearchParams(new FormData(document.getElementById('checkout-form')));
+
+                const response = await fetch("/api/place-order", {
+                    method: "POST",
+                    body: formData
+                });
+
+                if (response.ok) {
+                    // Success Notification
+                    alert("Order placed successfully! 🍪");
+                    window.location.href = "order_history.html";
+                }else {
+                    // This will tell us if the server sent an error (404, 500, etc.)
+                    alert("Server Error: " + response.status + ". Check MainServer.java!");
+                }
+            } catch (error) {
+                console.error("Order failed:", error);
+            }
+        }
+    </script>
+</head>
+<body onload="togglePaymentForm()">
+<header><h1>Checkout & Payment</h1></header>
+
+<main>
+    <form id="checkout-form">
+
+        <h2>1. Delivery Address</h2>
+        <label for="name">Full Name:</label>
+        <input type="text" id="name" name="name" required><br><br>
+
+        <label for="address">Full Delivery Address:</label>
+        <textarea id="address" name="address" rows="4" required></textarea><br><br>
+
+        <label for="phone">Phone Number:</label>
+        <input type="tel" id="phone" name="phone" required><br><br>
+
+        <h2>2. Payment Simulation</h2>
+
+        <fieldset>
+            <legend>Choose a Payment Method</legend>
+
+            <label>
+                <input type="radio" name="paymentMethod" value="COD" checked onclick="togglePaymentForm()">
+                Cash on Delivery (COD)
+            </label><br>
+
+            <label>
+                <input type="radio" name="paymentMethod" value="CC" onclick="togglePaymentForm()">
+                Credit Card
+            </label>
+
+            <div id="credit-card-fields" style="display:none; padding: 10px; border: 1px solid #ccc; margin-top: 5px;">
+                <label>Card Number :</label>
+                <input type="text" name="cc_number" placeholder="16 digits" pattern="\d{16}" title="Fake 16-digit card number"><br>
+                <label>Expiry :</label>
+                <input type="text" name="cc_expiry" placeholder="MM/YY" pattern="\d{2}/\d{2}" title="MM/YY"><br>
+            </div>
+            <br>
+
+            <label>
+                <input type="radio" name="paymentMethod" value="QR" onclick="togglePaymentForm()">
+                QR Code Option
+            </label>
+        </fieldset>
+
+        <div style="margin: 30px 0; padding: 15px; background: #f5f0eb; border-radius: 10px; border-left: 5px solid #5d4037;">
+            <label>
+                <input type="checkbox" id="agreement" required onchange="updatePlaceOrderButton()">
+                <strong>I agree to share this information for order processing and delivery purposes only.</strong><br>
+                <small style="font-size: 14px; color: #8d6e63;">Your data will be used solely to fulfill this order and will not be shared with third parties.</small>
+            </label>
+        </div>
+
+        <button type="button" id="placeOrderBtn" onclick="placeOrder()"
+                style="margin-top: 20px; padding: 10px 30px; background: #5d4037; color: white; border: none; border-radius: 50px; cursor: pointer; font-size: 16px; transition: all 0.3s;" >
+            Place Order
+        </button>
+
+    </form>
+</main>
+</body>
+</html>

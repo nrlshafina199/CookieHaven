@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Manage Orders | Admin</title>
+    <link rel="stylesheet" href="admin_style.css">
+</head>
+<body>
+<header><h1>Incoming Orders</h1><nav><a href="/admin/dashboard">Back</a></nav></header>
+<main>
+    <table>
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Customer</th>
+            <th>Total</th>
+            <th>Status</th>
+            <th>Action</th>
+        </tr>
+        </thead>
+        <tbody id="orderTableBody"></tbody>
+    </table>
+</main>
+<script>
+    fetch('/admin/orders').then(r => r.json()).then(orders => {
+        const body = document.getElementById('orderTableBody');
+        body.innerHTML = orders.map(o => `
+                <tr>
+                    <td>#${o.orderId}</td>
+                    <td>${o.customerName}<br><small>${o.phone}</small></td>
+                    <td>RM ${o.total.toFixed(2)}</td>
+                    <td><span class="status-${o.status.toLowerCase()}">${o.status}</span></td>
+                    <td>
+                        <button onclick="updateStatus(${o.orderId}, 'Shipped')">Mark Shipped</button>
+                    </td>
+                </tr>
+            `).join('');
+    });
+
+    async function updateStatus(id, status) {
+        await fetch(`/admin/orders/${id}/status`, {
+            method: 'POST',
+            body: new URLSearchParams({status: status})
+        });
+        location.reload();
+    }
+</script>
+</body>
+</html>

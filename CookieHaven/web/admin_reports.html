@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Sales Reports | CookieHaven</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body { font-family: sans-serif; background: #f8f1e7; padding: 20px; }
+        .container { max-width: 800px; margin: auto; background: white; padding: 20px; border-radius: 10px; }
+        canvas { margin-bottom: 50px; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>📊 Sales Performance</h1>
+    <button onclick="location.href='/admin/dashboard'">Back</button>
+
+    <h3>Monthly Revenue (RM)</h3>
+    <canvas id="monthChart"></canvas>
+
+    <h3>Sales by Product (Quantity)</h3>
+    <canvas id="productChart"></canvas>
+</div>
+
+<script>
+    fetch('/admin/reports/api').then(r => r.json()).then(data => {
+        // Month Chart
+        new Chart(document.getElementById('monthChart'), {
+            type: 'bar',
+            data: {
+                labels: Object.keys(data.monthlySales),
+                datasets: [{ label: 'Revenue', data: Object.values(data.monthlySales), backgroundColor: '#8d6e63' }]
+            }
+        });
+
+        // Product Chart
+        new Chart(document.getElementById('productChart'), {
+            type: 'pie',
+            data: {
+                labels: Object.keys(data.productSales),
+                datasets: [{ data: Object.values(data.productSales), backgroundColor: ['#5d4037', '#8d6e63', '#d7ccc8', '#a1887f'] }]
+            }
+        });
+    });
+</script>
+</body>
+</html>
