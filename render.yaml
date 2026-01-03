@@ -1,0 +1,7 @@
+services:
+  - type: web
+    name: cookiehaven
+    env: java
+    plan: free
+    buildCommand: javac -d out $(find . -name "*.java")
+    startCommand: java -cp out server.MainServer
