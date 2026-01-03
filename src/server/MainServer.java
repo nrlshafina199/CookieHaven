@@ -38,6 +38,63 @@ public class MainServer {
         server.createContext("/api/login", authHandler);
         server.createContext("/logout", authHandler);
 
+        // ============================
+        // ✅ NEW: Fetch order items ONLY
+        // ============================
+        server.createContext("/admin/orders/items", ex -> {
+            if (!ex.getRequestMethod().equalsIgnoreCase("GET")) {
+                ex.sendResponseHeaders(405, -1);
+                return;
+            }
+
+            String query = ex.getRequestURI().getQuery();
+            if (query == null || !query.startsWith("orderId=")) {
+                ex.sendResponseHeaders(400, -1);
+                return;
+            }
+
+            long orderId;
+            try {
+                orderId = Long.parseLong(query.split("=")[1]);
+            } catch (Exception e) {
+                ex.sendResponseHeaders(400, -1);
+                return;
+            }
+
+            OrderWithStatus order = OrderDatabase.getAllOrders()
+                    .stream()
+                    .filter(o -> o.getOrderId() == orderId)
+                    .findFirst()
+                    .orElse(null);
+
+            if (order == null) {
+                ex.sendResponseHeaders(404, -1);
+                return;
+            }
+
+            List<CartItem> items = order.getItems();
+
+            StringBuilder json = new StringBuilder("[");
+            for (int i = 0; i < items.size(); i++) {
+                CartItem item = items.get(i);
+                json.append("{")
+                        .append("\"productName\":\"").append(item.getProductName()).append("\",")
+                        .append("\"quantity\":").append(item.getQuantity())
+                        .append("}");
+                if (i < items.size() - 1) json.append(",");
+            }
+            json.append("]");
+
+            byte[] response = json.toString().getBytes(StandardCharsets.UTF_8);
+            ex.getResponseHeaders().add("Content-Type", "application/json");
+            ex.sendResponseHeaders(200, response.length);
+            ex.getResponseBody().write(response);
+            ex.close();
+        });
+
+        // ============================
+        // Existing admin feedback page
+        // ============================
         server.createContext("/admin/feedback", ex -> {
             byte[] data = readFile("web/admin_feedback.html");
             ex.getResponseHeaders().add("Content-Type", "text/html; charset=UTF-8");
@@ -89,7 +146,6 @@ public class MainServer {
             String[] cookies = cookie.split(";");
             for (String c : cookies) {
                 String[] parts = c.trim().split("=");
-                // 2. Use "AUTH_SESSION" to match your AuthHandler
                 if (parts.length == 2 && parts[0].equals("AUTH_SESSION")) {
                     return parts[1];
                 }
