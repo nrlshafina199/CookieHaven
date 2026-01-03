@@ -20,19 +20,31 @@ public class MainServer {
 
         AdminHandler adminHandler = new AdminHandler();
         server.createContext("/admin/products/api", adminHandler);
+        server.createContext("/admin_style.css", new StaticFileHandler());
         server.createContext("/admin", new AdminHandler());
         server.createContext("/api/cart", new CartAPIServlet());
         server.createContext("/checkout", new CheckoutHandler());
         server.createContext("/api/place-order", new CheckoutHandler());
+
+        ReviewHandler reviewHandler = new ReviewHandler();
+        server.createContext("/api/reviews", reviewHandler);
+
         server.createContext("/cart.html", new CartPageHandler());
         server.createContext("/", new StaticFileHandler());
         server.createContext("/api", new AuthHandler());
-
 
         AuthHandler authHandler = new AuthHandler();
         server.createContext("/api/register", authHandler);
         server.createContext("/api/login", authHandler);
         server.createContext("/logout", authHandler);
+
+        server.createContext("/admin/feedback", ex -> {
+            byte[] data = readFile("web/admin_feedback.html");
+            ex.getResponseHeaders().add("Content-Type", "text/html; charset=UTF-8");
+            ex.sendResponseHeaders(200, data.length);
+            ex.getResponseBody().write(data);
+            ex.close();
+        });
 
         server.createContext("/login.html", new StaticFileHandler());
         server.createContext("/register.html", new StaticFileHandler());

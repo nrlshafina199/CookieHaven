@@ -77,3 +77,148 @@ td { padding: 12px; border-bottom: 1px solid #eee; }
 .btn-add { background-color: #4caf50; color: white; }
 .btn-delete { background-color: #e53935; color: white; }
 .btn-primary { background-color: var(--primary-color); color: white; }
+
+/* ================= ORDER STATUS BADGES ================= */
+
+.status-pending {
+    background: #fff3cd;
+    color: #856404;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-weight: bold;
+    display: inline-block;
+}
+
+.status-packing {
+    background: #cce5ff;
+    color: #004085;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-weight: bold;
+    display: inline-block;
+}
+
+.status-shipped {
+    background: #d4edda;
+    color: #155724;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-weight: bold;
+    display: inline-block;
+}
+
+.status-delivered {
+    background: #e2e3e5;
+    color: #383d41;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-weight: bold;
+    display: inline-block;
+}
+
+/* ================= ACTION BUTTONS ================= */
+
+.order-btn {
+    padding: 6px 12px;
+    margin: 2px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.85em;
+}
+
+.btn-pack {
+    background: #007bff;
+    color: white;
+}
+
+.btn-ship {
+    background: #28a745;
+    color: white;
+}
+
+.btn-deliver {
+    background: #6c757d;
+    color: white;
+}
+
+.order-btn:hover {
+    opacity: 0.85;
+}
+
+.status {
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-weight: bold;
+    font-size: 0.85rem;
+}
+
+.status.pending {
+    background: #fff3cd;
+    color: #856404;
+}
+
+.status.preparing {
+    background: #cce5ff;
+    color: #004085;
+}
+
+.status.shipped {
+    background: #d4edda;
+    color: #155724;
+}
+
+.status.delivered {
+    background: #e2e3e5;
+    color: #383d41;
+}
+
+.orders-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: #fff;
+    border-radius: 10px;
+}
+
+.orders-table th {
+    background: #5d4037;
+    color: #fff;
+    padding: 12px;
+}
+
+.orders-table td {
+    padding: 12px;
+    border-bottom: 1px solid #eee;
+}
+
+.price {
+    color: #d84315;
+    font-weight: bold;
+}
+
+.status {
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: bold;
+}
+
+.status.pending {
+    background: #fff3cd;
+    color: #ff9800;
+}
+
+.status.preparing {
+    background: #e3f2fd;
+    color: #1976d2;
+}
+
+.status.shipped {
+    background: #ede7f6;
+    color: #5e35b1;
+}
+
+.status.delivered {
+    background: #e8f5e9;
+    color: #2e7d32;
+}

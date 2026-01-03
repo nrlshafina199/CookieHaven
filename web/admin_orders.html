@@ -2,48 +2,70 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Manage Orders | Admin</title>
-    <link rel="stylesheet" href="admin_style.css">
+    <title>View Orders | CookieHaven Admin</title>
+    <link rel="stylesheet" href="/admin_style.css">
 </head>
-<body>
-<header><h1>Incoming Orders</h1><nav><a href="/admin/dashboard">Back</a></nav></header>
-<main>
-    <table>
-        <thead>
-        <tr>
-            <th>ID</th>
-            <th>Customer</th>
-            <th>Total</th>
-            <th>Status</th>
-            <th>Action</th>
-        </tr>
-        </thead>
-        <tbody id="orderTableBody"></tbody>
-    </table>
-</main>
-<script>
-    fetch('/admin/orders').then(r => r.json()).then(orders => {
-        const body = document.getElementById('orderTableBody');
-        body.innerHTML = orders.map(o => `
-                <tr>
-                    <td>#${o.orderId}</td>
-                    <td>${o.customerName}<br><small>${o.phone}</small></td>
-                    <td>RM ${o.total.toFixed(2)}</td>
-                    <td><span class="status-${o.status.toLowerCase()}">${o.status}</span></td>
-                    <td>
-                        <button onclick="updateStatus(${o.orderId}, 'Shipped')">Mark Shipped</button>
-                    </td>
-                </tr>
-            `).join('');
-    });
 
-    async function updateStatus(id, status) {
-        await fetch(`/admin/orders/${id}/status`, {
-            method: 'POST',
-            body: new URLSearchParams({status: status})
+<body>
+<div class="admin-layout">
+
+    <aside class="sidebar">
+        <h2>🍪 CookieHaven</h2>
+        <nav>
+            <a href="/admin/dashboard">🏠 Dashboard</a>
+            <a href="/admin/products">📦 Manage Products</a>
+            <a href="/admin/orders" class="active">📦 View Orders</a>
+            <a href="/admin/feedback">💬 Customer Feedback</a>
+            <a href="/admin/reports">📊 Sales Reports</a>
+            <a href="/admin/logout" class="logout">🚪 Logout</a>
+        </nav>
+    </aside>
+
+    <main class="content">
+        <h1>Incoming Orders</h1>
+
+        <table class="orders-table">
+            <thead>
+            <tr>
+                <th>Order ID</th>
+                <th>Customer</th>
+                <th>Total</th>
+                <th>Status</th>
+            </tr>
+            </thead>
+            <tbody id="orderTableBody">
+            <tr><td colspan="4">Loading orders...</td></tr>
+            </tbody>
+        </table>
+    </main>
+</div>
+
+<script>
+    fetch('/admin/orders/api')
+        .then(res => res.json())
+        .then(orders => {
+            const body = document.getElementById('orderTableBody');
+
+            if (!orders.length) {
+                body.innerHTML = `<tr><td colspan="4">No orders found</td></tr>`;
+                return;
+            }
+
+            body.innerHTML = orders.map(o => `
+            <tr>
+                <td>#${o.orderId}</td>
+                <td>
+                    <strong>${o.customerName}</strong><br>
+                    <small>${o.phone}</small>
+                </td>
+                <td class="price">RM ${o.total.toFixed(2)}</td>
+                <td>
+                    <span class="status pending">Pending</span>
+                </td>
+            </tr>
+        `).join('');
         });
-        location.reload();
-    }
 </script>
+
 </body>
 </html>

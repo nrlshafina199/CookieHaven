@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Customer Reviews | CookieHaven</title>
+
+    <style>
+        :root { --primary: #5d4037; --accent: #8d6e63; --bg: #f8f1e7; }
+
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: var(--bg);
+            color: var(--primary);
+            margin: 0;
+        }
+
+        header {
+            background: var(--primary);
+            color: white;
+            padding: 15px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            margin-left: 15px;
+        }
+
+        footer {
+            background: var(--primary);
+            color: white;
+            padding: 40px;
+            text-align: center;
+            margin-top: 50px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 20px;
+        }
+
+        .review-form {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 40px;
+            border: 2px dashed var(--accent);
+        }
+
+        .form-group { margin-bottom: 15px; }
+
+        input, textarea, select {
+            width: 100%;
+            padding: 10px;
+            box-sizing: border-box;
+            margin-top: 5px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        button {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: bold;
+        }
+
+        button:hover { background: #4e342e; }
+
+        .filter-bar {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .review-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .review-card {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            border-bottom: 4px solid var(--accent);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        }
+
+        .stars {
+            color: #ffb400;
+            font-size: 1.2em;
+            margin: 10px 0;
+        }
+
+        .cookie-tag {
+            background: #eee;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.8em;
+            display: inline-block;
+            margin-bottom: 10px;
+        }
+
+        .user-name {
+            font-weight: bold;
+            font-size: 0.9em;
+            color: #777;
+            margin-top: 10px;
+        }
+
+        .review-img-preview {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-top: 10px;
+            border: 1px solid #ddd;
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <h2 style="margin: 0;">🍪 CookieHaven</h2>
+    <nav class="nav-links">
+        <a href="/order.html">🏠 Home</a>
+        <a href="/order.html#shop">🛍️ Shop</a>
+        <a href="/reviews.html">⭐ Reviews</a>
+        <a href="/register.html">📝 Register</a>
+        <a href="/login.html">👤 Login</a>
+        <a href="/order_history.html">📋 My Orders</a>
+    </nav>
+    <a href="/cart.html" id="cart-status">🛒 Cart (<span id="cart-count">0</span>)</a>
+</header>
+
+<div class="container">
+    <h1 style="text-align:center;">Customer Love 🍪</h1>
+
+    <!-- REVIEW FORM -->
+    <div class="review-form">
+        <h3>Write a Review</h3>
+
+        <div class="form-group">
+            <label>Which Cookie?</label>
+            <select id="product">
+                <option>Classic Choco Chip</option>
+                <option>Oatmeal Raisin</option>
+                <option>Peanut Butter</option>
+                <option>Red Velvet</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label>Rating</label>
+            <select id="rating">
+                <option value="5">⭐⭐⭐⭐⭐</option>
+                <option value="4">⭐⭐⭐⭐</option>
+                <option value="3">⭐⭐⭐</option>
+                <option value="2">⭐⭐</option>
+                <option value="1">⭐</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label>Your Review</label>
+            <textarea id="text" rows="3" placeholder="Tell us what you liked..." required></textarea>
+        </div>
+
+        <div class="form-group">
+            <label>Add Photo (Optional, max 500KB)</label>
+            <input type="file" id="photo" accept="image/*">
+        </div>
+
+        <button onclick="submitReview()">Submit Review</button>
+    </div>
+
+    <!-- FILTER -->
+    <div class="filter-bar">
+        <span>Showing reviews</span>
+        <select id="filter" onchange="loadReviews()">
+            <option value="all">All Ratings</option>
+            <option value="5">5 Stars</option>
+            <option value="4">4 Stars</option>
+            <option value="3">3 Stars</option>
+            <option value="2">2 Stars</option>
+            <option value="1">1 Star</option>
+        </select>
+    </div>
+
+    <!-- REVIEWS -->
+    <div class="review-grid" id="reviewsList">
+        <p style="grid-column:1/-1;text-align:center;">Loading reviews...</p>
+    </div>
+</div>
+
+<footer>
+    <p>&copy; 2025 CookieHaven Bakery | Share the Sweetness</p>
+</footer>
+
+<script>
+    async function submitReview() {
+        const product = document.getElementById("product").value;
+        const rating = document.getElementById("rating").value;
+        const text = document.getElementById("text").value;
+        const file = document.getElementById("photo").files[0];
+
+        if (!text.trim()) {
+            alert("Please write a review.");
+            return;
+        }
+
+        let image = "none";
+        if (file) {
+            if (file.size > 500000) {
+                alert("Image too large (max 500KB).");
+                return;
+            }
+            image = await toBase64(file);
+        }
+
+        const params = new URLSearchParams();
+        params.append("cookieType", product);
+        params.append("rating", rating);
+        params.append("comment", text);
+        params.append("image", image);
+
+        await fetch("/api/reviews", {
+            method: "POST",
+            body: params
+        });
+
+        alert("Review posted!");
+        document.getElementById("text").value = "";
+        document.getElementById("photo").value = "";
+
+        loadReviews();
+    }
+
+    async function loadReviews() {
+        const container = document.getElementById("reviewsList");
+        container.innerHTML = "<p>Loading reviews...</p>";
+
+        try {
+            const res = await fetch("/api/reviews");
+            const reviews = await res.json();
+
+            if (reviews.length === 0) {
+                container.innerHTML = "<p>No reviews yet.</p>";
+                return;
+            }
+
+            container.innerHTML = reviews.map(r => `
+                <div class="review-card">
+                    <div class="cookie-tag">🍪 ${r.cookie}</div>
+                    <div class="stars">${'★'.repeat(r.rating)}${'☆'.repeat(5 - r.rating)}</div>
+                    <p>"${r.comment}"</p>
+                    ${r.image !== "none" ? `<img src="${r.image}" class="review-img-preview">` : ""}
+                </div>
+            `).join("");
+
+        } catch (e) {
+            console.error(e);
+            container.innerHTML = "<p>Error loading reviews.</p>";
+        }
+    }
+
+    const toBase64 = file => new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = reject;
+    });
+
+    loadReviews();
+</script>
+
+
+</body>
+</html>

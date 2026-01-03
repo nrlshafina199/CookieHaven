@@ -35,3 +35,14 @@ Items:
   - Product ID: PB03 (Qty: 1, Price: 7.00, Subtotal: 7.00)
 -------------------------
 
+--- FINAL ORDER #1767418359317 ---
+Date: Sat Jan 03 13:32:39 GMT+08:00 2026
+Name: farah
+Phone: 01155662615
+Address: usm
+Payment: COD
+Total: RM 5.00
+Items:
+  - Product ID: CHIP01 (Qty: 1, Price: 5.00, Subtotal: 5.00)
+-------------------------
+

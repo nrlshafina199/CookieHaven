@@ -70,7 +70,7 @@ public class OrderDatabase {
         }
     }
 
-    public static List<Order> getAllOrders() {
+    public static List<OrderWithStatus> getAllOrders() {
         return new ArrayList<>(ORDERS.values());
     }
 
