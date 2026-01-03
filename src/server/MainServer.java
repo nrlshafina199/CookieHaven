@@ -38,6 +38,8 @@ public class MainServer {
         server.createContext("/api/login", authHandler);
         server.createContext("/logout", authHandler);
 
+        server.createContext("/api/products", new PublicProductHandler());
+
         // ============================
         // ✅ NEW: Fetch order items ONLY
         // ============================
