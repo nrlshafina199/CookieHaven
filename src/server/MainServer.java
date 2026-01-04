@@ -16,25 +16,96 @@ public class MainServer {
 
     public static void main(String[] args) throws Exception {
 
-        HttpServer server = HttpServer.create(new InetSocketAddress(8080), 0);
+        //HttpServer server = HttpServer.create(new InetSocketAddress(8080), 0);
+        int port = Integer.parseInt(System.getenv().getOrDefault("PORT", "8080"));
+        HttpServer server = HttpServer.create(new InetSocketAddress(port), 0);
 
         AdminHandler adminHandler = new AdminHandler();
         server.createContext("/admin/products/api", adminHandler);
+        server.createContext("/admin_style.css", new StaticFileHandler());
         server.createContext("/admin", new AdminHandler());
         server.createContext("/api/cart", new CartAPIServlet());
-        server.createContext("/api/reviews", new ReviewHandler());
-        server.createContext("/api/history", new server.model.OrderHistoryHandler());
         server.createContext("/checkout", new CheckoutHandler());
         server.createContext("/api/place-order", new CheckoutHandler());
+
+        ReviewHandler reviewHandler = new ReviewHandler();
+        server.createContext("/api/reviews", reviewHandler);
+
         server.createContext("/cart.html", new CartPageHandler());
         server.createContext("/", new StaticFileHandler());
         server.createContext("/api", new AuthHandler());
-
 
         AuthHandler authHandler = new AuthHandler();
         server.createContext("/api/register", authHandler);
         server.createContext("/api/login", authHandler);
         server.createContext("/logout", authHandler);
+
+        server.createContext("/api/products", new PublicProductHandler());
+
+        // ============================
+        // ✅ NEW: Fetch order items ONLY
+        // ============================
+        server.createContext("/admin/orders/items", ex -> {
+            if (!ex.getRequestMethod().equalsIgnoreCase("GET")) {
+                ex.sendResponseHeaders(405, -1);
+                return;
+            }
+
+            String query = ex.getRequestURI().getQuery();
+            if (query == null || !query.startsWith("orderId=")) {
+                ex.sendResponseHeaders(400, -1);
+                return;
+            }
+
+            long orderId;
+            try {
+                orderId = Long.parseLong(query.split("=")[1]);
+            } catch (Exception e) {
+                ex.sendResponseHeaders(400, -1);
+                return;
+            }
+
+            OrderWithStatus order = OrderDatabase.getAllOrders()
+                    .stream()
+                    .filter(o -> o.getOrderId() == orderId)
+                    .findFirst()
+                    .orElse(null);
+
+            if (order == null) {
+                ex.sendResponseHeaders(404, -1);
+                return;
+            }
+
+            List<CartItem> items = order.getItems();
+
+            StringBuilder json = new StringBuilder("[");
+            for (int i = 0; i < items.size(); i++) {
+                CartItem item = items.get(i);
+                json.append("{")
+                        .append("\"productName\":\"").append(item.getProductName()).append("\",")
+                        .append("\"quantity\":").append(item.getQuantity())
+                        .append("}");
+                if (i < items.size() - 1) json.append(",");
+            }
+            json.append("]");
+
+            byte[] response = json.toString().getBytes(StandardCharsets.UTF_8);
+            ex.getResponseHeaders().add("Content-Type", "application/json");
+            ex.sendResponseHeaders(200, response.length);
+            ex.getResponseBody().write(response);
+            ex.close();
+        });
+
+        // ============================
+        // Existing admin feedback page
+        // ============================
+        server.createContext("/admin/feedback", ex -> {
+            byte[] data = readFile("web/admin_feedback.html");
+            ex.getResponseHeaders().add("Content-Type", "text/html; charset=UTF-8");
+            ex.sendResponseHeaders(200, data.length);
+            ex.getResponseBody().write(data);
+            ex.close();
+        });
 
         server.createContext("/login.html", new StaticFileHandler());
         server.createContext("/register.html", new StaticFileHandler());
@@ -79,7 +150,6 @@ public class MainServer {
             String[] cookies = cookie.split(";");
             for (String c : cookies) {
                 String[] parts = c.trim().split("=");
-                // 2. Use "AUTH_SESSION" to match your AuthHandler
                 if (parts.length == 2 && parts[0].equals("AUTH_SESSION")) {
                     return parts[1];
                 }

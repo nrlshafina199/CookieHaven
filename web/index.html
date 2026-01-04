@@ -7,7 +7,6 @@
         :root { --primary: #5d4037; --accent: #8d6e63; --bg: #f8f1e7; }
         body { font-family: 'Segoe UI', sans-serif; margin: 0; display: flex; background: var(--bg); }
 
-        /* Sidebar styling to match your Profile page */
         .sidebar { width: 250px; background: var(--primary); height: 100vh; color: white; padding: 20px; position: fixed; }
         .sidebar h2 { margin-bottom: 30px; }
         .sidebar a { display: block; color: #d7ccc8; text-decoration: none; padding: 12px; margin: 8px 0; border-radius: 5px; }
@@ -21,7 +20,6 @@
             display: flex; flex-direction: column; justify-content: center; align-items: center; color: white; text-align: center;
         }
 
-        /* THE GREETING STYLE */
         #user-greeting { color: #ffccbc; font-size: 1.8rem; margin-bottom: 10px; min-height: 2rem; }
     </style>
 </head>
@@ -49,17 +47,17 @@
     </section>
 </div>
 
+<script src="cookie_consent.js"></script>
+
 <script>
     document.addEventListener("DOMContentLoaded", async () => {
         const greetingElement = document.getElementById("user-greeting");
 
         try {
-            // Fetching data from the same API as your Profile page
             const res = await fetch("/api/user-data");
             if (res.ok) {
                 const data = await res.json();
                 if (data && data.username) {
-                    // Updating the text dynamically
                     greetingElement.textContent = "Welcome back, " + data.username + "! 🍪";
                 }
             }

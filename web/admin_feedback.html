@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Customer Feedback | Admin</title>
+    <style>
+        /* --- COOKIE HAVEN ADMIN THEME --- */
+        :root {
+            --primary: #5d4037;   /* Dark Chocolate */
+            --accent: #8d6e63;    /* Milk Chocolate */
+            --bg: #f8f1e7;        /* Cream Background */
+            --white: #ffffff;
+            --text-dark: #3e2723;
+        }
+
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            margin: 0;
+            display: flex;
+            height: 100vh;
+            background: var(--bg);
+            color: var(--text-dark);
+        }
+
+        /* SIDEBAR STYLING (Matches Dashboard) */
+        .sidebar {
+            width: 260px;
+            background: var(--primary);
+            color: var(--white);
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+            box-shadow: 4px 0 10px rgba(0,0,0,0.1);
+        }
+
+        .sidebar h2 {
+            text-align: left;
+            margin-bottom: 40px;
+            font-size: 1.5rem;
+            padding-left: 10px;
+            border-bottom: 1px solid var(--accent);
+            padding-bottom: 15px;
+        }
+
+        .sidebar a {
+            text-decoration: none;
+            color: #d7ccc8; /* Light text for inactive */
+            padding: 15px;
+            margin-bottom: 8px;
+            border-radius: 8px;
+            transition: 0.3s;
+            display: flex;
+            align-items: center;
+            font-size: 1rem;
+        }
+
+        .sidebar a:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--white);
+        }
+
+        /* Active State */
+        .sidebar a.active {
+            background: var(--accent);
+            color: var(--white);
+            font-weight: bold;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .sidebar a span { margin-right: 12px; }
+
+        /* MAIN CONTENT AREA */
+        .content {
+            flex: 1;
+            padding: 40px;
+            overflow-y: auto;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        h1 { color: var(--text-dark); margin: 0; }
+
+        /* REFRESH BUTTON */
+        .btn-refresh {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: 0.2s;
+        }
+        .btn-refresh:hover { background: var(--accent); }
+
+        /* REVIEW CARD GRID */
+        .review-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 20px;
+        }
+
+        .review-card {
+            background: var(--white);
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            border-left: 6px solid var(--primary); /* Brown accent border */
+            transition: transform 0.2s;
+        }
+        .review-card:hover { transform: translateY(-3px); }
+
+        .user-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            font-size: 0.9em;
+            color: #795548;
+        }
+
+        .cookie-badge {
+            background: var(--bg);
+            color: var(--primary);
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: bold;
+            border: 1px solid #efebe9;
+        }
+
+        .rating { color: #fbc02d; font-size: 1.2em; margin-bottom: 10px; }
+
+        .comment {
+            color: #4e342e;
+            line-height: 1.6;
+            font-style: italic;
+            background: #fafafa;
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+
+        .review-img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-top: 10px;
+            border: 1px solid #eee;
+            cursor: pointer;
+        }
+        .review-img:hover { opacity: 0.9; }
+
+        .empty-state {
+            text-align: center;
+            color: #a1887f;
+            margin-top: 50px;
+            font-size: 1.2em;
+            width: 100%;
+            grid-column: 1 / -1;
+        }
+    </style>
+</head>
+<body>
+
+<div class="sidebar">
+    <h2>CookieHaven</h2>
+    <a href="/admin/dashboard"><span>📊</span> Dashboard</a>
+    <a href="/admin/products"><span>🍪</span> Manage Products</a>
+    <a href="/admin/orders">📦 View Orders</a>
+    <a href="/admin/reviews" class="active"><span>⭐</span> Customer Feedback</a>
+    <a href="/admin/reports"><span>📈</span> Sales Reports</a>
+
+    <a href="/admin/logout"><span>🚪</span> Logout</a>
+</div>
+
+<div class="content">
+    <div class="header">
+        <h1>Customer Feedback</h1>
+        <button class="btn-refresh" onclick="location.reload()">Refresh Reviews</button>
+    </div>
+
+    <div id="review-container" class="review-grid">
+        <div class="empty-state">Loading latest reviews...</div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", loadReviews);
+
+    async function loadReviews() {
+        const container = document.getElementById("review-container");
+
+        try {
+            const res = await fetch("/api/reviews");
+            const reviews = await res.json();
+
+            if (reviews.length === 0) {
+                container.innerHTML = '<div class="empty-state">No reviews submitted yet.</div>';
+                return;
+            }
+
+            container.innerHTML = reviews.map(r => {
+                const imgHtml = (r.image && r.image !== "none")
+                    ? `<img src="${r.image}" class="review-img" onclick="window.open(this.src)">`
+                    : '';
+
+                return `
+                <div class="review-card">
+                    <div class="user-info">
+                        <span style="font-weight:bold">👤 Anonymous</span>
+                        <span class="cookie-badge">${r.cookie}</span>
+                    </div>
+                    <div class="rating">${'★'.repeat(r.rating)}${'☆'.repeat(5-r.rating)}</div>
+                    <div class="comment">"${r.comment}"</div>
+                    ${imgHtml}
+                </div>
+            `;
+            }).join('');
+
+        } catch (e) {
+            console.error(e);
+            container.innerHTML =
+                '<div class="empty-state" style="color:#d32f2f">Error loading reviews.</div>';
+        }
+    }
+</script>
+
+
+</body>
+</html>

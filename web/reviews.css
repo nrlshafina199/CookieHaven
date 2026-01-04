@@ -1,0 +1,68 @@
+body {
+    font-family: Arial, sans-serif;
+    background: #faf3e7;
+    margin: 0;
+}
+
+.navbar {
+    background: #6b4a3b;
+    color: white;
+    padding: 15px 30px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.navbar a {
+    color: white;
+    margin-left: 15px;
+    text-decoration: none;
+}
+
+.navbar .active {
+    text-decoration: underline;
+}
+
+.container {
+    max-width: 900px;
+    margin: 30px auto;
+}
+
+.review-form, .filter {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+}
+
+textarea, select {
+    width: 100%;
+    margin: 8px 0;
+}
+
+button {
+    background: #6b4a3b;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    border-radius: 6px;
+}
+
+.reviews .review-card {
+    background: white;
+    padding: 15px;
+    border-radius: 10px;
+    margin-bottom: 15px;
+}
+
+.review-card img {
+    max-width: 200px;
+    margin-top: 10px;
+}
+
+.tag {
+    background: #eee;
+    padding: 4px 8px;
+    border-radius: 10px;
+    font-size: 12px;
+}

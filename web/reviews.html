@@ -3,43 +3,132 @@
 <head>
     <meta charset="UTF-8">
     <title>Customer Reviews | CookieHaven</title>
+
     <style>
         :root { --primary: #5d4037; --accent: #8d6e63; --bg: #f8f1e7; }
-        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--primary); margin: 0; }
 
-        header { background: var(--primary); color: white; padding: 15px 40px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 1000; }
-        .nav-links a { color: white; text-decoration: none; font-weight: bold; margin-left: 15px; }
-        footer { background: var(--primary); color: white; padding: 40px; text-align: center; margin-top: 50px;}
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: var(--bg);
+            color: var(--primary);
+            margin: 0;
+        }
 
-        .container { max-width: 900px; margin: 40px auto; padding: 20px; }
+        header {
+            background: var(--primary);
+            color: white;
+            padding: 15px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            margin-left: 15px;
+        }
+
+        footer {
+            background: var(--primary);
+            color: white;
+            padding: 40px;
+            text-align: center;
+            margin-top: 50px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 20px;
+        }
+
+        .review-form {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 40px;
+            border: 2px dashed var(--accent);
+        }
+
+        .form-group { margin-bottom: 15px; }
+
+        input, textarea, select {
+            width: 100%;
+            padding: 10px;
+            box-sizing: border-box;
+            margin-top: 5px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        button {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: bold;
+        }
+
+        button:hover { background: #4e342e; }
 
         .filter-bar {
-            background: white; padding: 20px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-            display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
         }
-        select { padding: 10px; border-radius: 5px; border: 1px solid var(--primary); font-size: 1em; }
 
-        .review-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
+        .review-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
         .review-card {
-            background: white; padding: 20px; border-radius: 15px; border-bottom: 4px solid var(--accent);
-            box-shadow: 0 4px 10px rgba(0,0,0,0.05); transition: transform 0.2s;
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            border-bottom: 4px solid var(--accent);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
         }
-        .review-card:hover { transform: translateY(-5px); }
 
-        .stars { color: #ffb400; font-size: 1.2em; margin: 10px 0; }
-        .user-name { font-weight: bold; font-size: 0.9em; color: #777; }
-        .cookie-tag { background: #eee; padding: 4px 10px; border-radius: 20px; font-size: 0.8em; display: inline-block; margin-bottom: 10px; }
+        .stars {
+            color: #ffb400;
+            font-size: 1.2em;
+            margin: 10px 0;
+        }
 
-        /* NEW: Review Image Styles */
-        .review-img-preview { width: 100%; height: 150px; object-fit: cover; border-radius: 8px; margin-top: 10px; border: 1px solid #ddd; }
+        .cookie-tag {
+            background: #eee;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.8em;
+            display: inline-block;
+            margin-bottom: 10px;
+        }
 
-        .review-form { background: white; padding: 30px; border-radius: 15px; margin-bottom: 40px; border: 2px dashed var(--accent); }
-        .form-group { margin-bottom: 15px; }
-        input, textarea, select { width: 100%; padding: 10px; box-sizing: border-box; margin-top: 5px; border: 1px solid #ddd; border-radius: 5px;}
-        button { background: var(--primary); color: white; border: none; padding: 12px 25px; border-radius: 5px; cursor: pointer; font-size: 1em; font-weight: bold; }
-        button:hover { background: #4e342e; }
+        .review-img-preview {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-top: 10px;
+            border: 1px solid #ddd;
+        }
     </style>
 </head>
+
 <body>
 
 <header>
@@ -52,62 +141,60 @@
         <a href="/login.html">👤 Login</a>
         <a href="/order_history.html">📋 My Orders</a>
     </nav>
+    <a href="/cart.html" id="cart-status">🛒 Cart (<span id="cart-count">0</span>)</a>
 </header>
 
 <div class="container">
-    <h1 style="text-align: center;">Customer Love 🍪</h1>
+    <h1 style="text-align:center;">Customer Love 🍪</h1>
 
     <div class="review-form">
         <h3>Write a Review</h3>
-        <form id="addReviewForm">
-            <div class="form-group">
-                <label>Which Cookie?</label>
-                <select id="cookieType" name="cookieType">
-                    <option value="Classic Choco Chip">Classic Choco Chip</option>
-                    <option value="Oatmeal Raisin">Oatmeal Raisin</option>
-                    <option value="Peanut Butter">Peanut Butter Delight</option>
-                    <option value="Red Velvet">Red Velvet Chocolate</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label>Rating</label>
-                <select id="rating" name="rating">
-                    <option value="5">⭐⭐⭐⭐⭐ (Excellent)</option>
-                    <option value="4">⭐⭐⭐⭐ (Good)</option>
-                    <option value="3">⭐⭐⭐ (Average)</option>
-                    <option value="2">⭐⭐ (Poor)</option>
-                    <option value="1">⭐ (Terrible)</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label>Your Review</label>
-                <textarea id="comment" name="comment" rows="3" placeholder="Tell us what you liked..." required></textarea>
-            </div>
 
-            <div class="form-group">
-                <label>Add a Photo (Optional, Max 500KB)</label>
-                <input type="file" id="reviewImgInput" accept="image/*">
-            </div>
+        <div class="form-group">
+            <label>Which Cookie?</label>
+            <select id="product">
+                <option value="" disabled selected>Loading cookies...</option>
+            </select>
+        </div>
 
-            <button type="submit">Submit Review</button>
-        </form>
+        <div class="form-group">
+            <label>Rating</label>
+            <select id="rating">
+                <option value="5">⭐⭐⭐⭐⭐</option>
+                <option value="4">⭐⭐⭐⭐</option>
+                <option value="3">⭐⭐⭐</option>
+                <option value="2">⭐⭐</option>
+                <option value="1">⭐</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label>Your Review</label>
+            <textarea id="text" rows="3" placeholder="Tell us what you liked..." required></textarea>
+        </div>
+
+        <div class="form-group">
+            <label>Add Photo (Optional, max 500KB)</label>
+            <input type="file" id="photo" accept="image/*">
+        </div>
+
+        <button onclick="submitReview()">Submit Review</button>
     </div>
 
     <div class="filter-bar">
-        <span>Showing all reviews</span>
-        <div>
-            <label>Filter by:</label>
-            <select id="starFilter" onchange="loadReviews()">
-                <option value="all">All Ratings</option>
-                <option value="5">5 Stars Only</option>
-                <option value="4">4 Stars Only</option>
-                <option value="3">3 Stars & Below</option>
-            </select>
-        </div>
+        <span>Showing reviews</span>
+        <select id="filter" onchange="loadReviews()">
+            <option value="all">All Ratings</option>
+            <option value="5">5 Stars</option>
+            <option value="4">4 Stars</option>
+            <option value="3">3 Stars</option>
+            <option value="2">2 Stars</option>
+            <option value="1">1 Star</option>
+        </select>
     </div>
 
-    <div class="review-grid" id="review-container">
-        <div style="grid-column: 1/-1; text-align: center;">Loading reviews...</div>
+    <div class="review-grid" id="reviewsList">
+        <p style="grid-column:1/-1;text-align:center;">Loading reviews...</p>
     </div>
 </div>
 
@@ -116,99 +203,125 @@
 </footer>
 
 <script>
-    document.addEventListener("DOMContentLoaded", () => {
-        loadReviews();
+    // 1. POPULATE DROPDOWN FROM ADMIN DATABASE
+    async function loadProducts() {
+        const productDropdown = document.getElementById("product");
 
-        const form = document.getElementById("addReviewForm");
-        form.addEventListener("submit", async (e) => {
-            e.preventDefault();
+        try {
+            const res = await fetch("/api/products");
+            const products = await res.json();
 
-            // 1. Process Image First (Convert to Base64 String)
-            const fileInput = document.getElementById("reviewImgInput");
-            let imageBase64 = "none"; // Default if no image
+            // Clear the "Loading..." message
+            productDropdown.innerHTML = '<option value="" disabled selected>Select a cookie...</option>';
 
-            if (fileInput.files.length > 0) {
-                const file = fileInput.files[0];
+            products.forEach(p => {
+                const opt = document.createElement("option");
+                opt.value = p.name; // Matches the 'name' property from your Java backend
+                opt.textContent = p.name;
+                productDropdown.appendChild(opt);
+            });
+        } catch (e) {
+            console.error("Error loading products:", e);
+            productDropdown.innerHTML = '<option value="" disabled>Error loading cookies</option>';
+        }
+    }
 
-                // Simple size check (0.5MB limit to keep text file safe)
-                if (file.size > 500000) {
-                    alert("Image is too large! Please choose one under 500KB.");
-                    return;
-                }
+    // 2. SUBMIT REVIEW
+    async function submitReview() {
+        const product = document.getElementById("product").value;
+        const rating = document.getElementById("rating").value;
+        const text = document.getElementById("text").value;
+        const file = document.getElementById("photo").files[0];
 
-                // Wait for conversion
-                imageBase64 = await toBase64(file);
+        if (!product) {
+            alert("Please select a cookie to review.");
+            return;
+        }
+
+        if (!text.trim()) {
+            alert("Please write a review.");
+            return;
+        }
+
+        let image = "none";
+        if (file) {
+            if (file.size > 500000) {
+                alert("Image too large (max 500KB).");
+                return;
+            }
+            image = await toBase64(file);
+        }
+
+        const params = new URLSearchParams();
+        params.append("cookieType", product);
+        params.append("rating", rating);
+        params.append("comment", text);
+        params.append("image", image);
+
+        try {
+            await fetch("/api/reviews", {
+                method: "POST",
+                body: params
+            });
+
+            alert("Review posted!");
+            // Reset form fields
+            document.getElementById("product").selectedIndex = 0;
+            document.getElementById("text").value = "";
+            document.getElementById("photo").value = "";
+
+            loadReviews();
+        } catch (e) {
+            alert("Error submitting review.");
+        }
+    }
+
+    // 3. LOAD ALL REVIEWS
+    async function loadReviews() {
+        const container = document.getElementById("reviewsList");
+        const filterValue = document.getElementById("filter").value;
+        container.innerHTML = "<p>Loading reviews...</p>";
+
+        try {
+            const res = await fetch("/api/reviews");
+            let reviews = await res.json();
+
+            // Apply rating filter if selected
+            if (filterValue !== "all") {
+                reviews = reviews.filter(r => r.rating == filterValue);
             }
 
-            // 2. Prepare Data
-            const params = new URLSearchParams();
-            params.append("cookieType", document.getElementById("cookieType").value);
-            params.append("rating", document.getElementById("rating").value);
-            params.append("comment", document.getElementById("comment").value);
-            params.append("image", imageBase64); // Send the long image string
-
-            // 3. Send to Server
-            try {
-                const res = await fetch("/api/reviews", {
-                    method: "POST",
-                    body: params
-                });
-
-                if (res.ok) {
-                    alert("Thank you for your review!");
-                    form.reset();
-                    loadReviews();
-                } else {
-                    alert("Something went wrong.");
-                }
-            } catch (err) {
-                console.error(err);
-                alert("Error submitting review.");
+            if (reviews.length === 0) {
+                container.innerHTML = "<p>No reviews yet.</p>";
+                return;
             }
-        });
-    });
 
-    // Helper: Converts file to text string
+            container.innerHTML = reviews.map(r => `
+                <div class="review-card">
+                    <div class="cookie-tag">🍪 ${r.cookie}</div>
+                    <div class="stars">${'★'.repeat(r.rating)}${'☆'.repeat(5 - r.rating)}</div>
+                    <p>"${r.comment}"</p>
+                    ${r.image !== "none" ? `<img src="${r.image}" class="review-img-preview">` : ""}
+                </div>
+            `).join("");
+
+        } catch (e) {
+            console.error(e);
+            container.innerHTML = "<p>Error loading reviews.</p>";
+        }
+    }
+
+    // 4. HELPER: CONVERT IMAGE TO BASE64
     const toBase64 = file => new Promise((resolve, reject) => {
         const reader = new FileReader();
         reader.readAsDataURL(file);
         reader.onload = () => resolve(reader.result);
-        reader.onerror = error => reject(error);
+        reader.onerror = reject;
     });
 
-    async function loadReviews() {
-        const filter = document.getElementById("starFilter").value;
-        const container = document.getElementById("review-container");
-
-        try {
-            const res = await fetch(`/api/reviews?filter=${filter}`);
-            const reviews = await res.json();
-
-            if(reviews.length === 0) {
-                container.innerHTML = '<p style="grid-column: 1/-1; text-align: center;">No reviews found for this filter.</p>';
-                return;
-            }
-
-            container.innerHTML = reviews.map(r => {
-                // Check if there is an image string
-                const imgHtml = (r.image && r.image !== "none")
-                    ? `<img src="${r.image}" class="review-img-preview" alt="Customer Photo">`
-                    : '';
-
-                return `
-                <div class="review-card">
-                    <div class="cookie-tag">🍪 ${r.cookie}</div>
-                    <div class="stars">${'★'.repeat(r.rating)}${'☆'.repeat(5-r.rating)}</div>
-                    <p>"${r.comment}"</p>
-                    ${imgHtml} <div class="user-name">- ${r.user}</div>
-                </div>
-            `}).join('');
-
-        } catch (e) {
-            console.log("Error loading reviews:", e);
-            container.innerHTML = '<p style="text-align:center">No reviews yet.</p>';
-        }
-    }
+    // INITIALIZE PAGE
+    loadProducts();
+    loadReviews();
 </script>
 
 </body>
