@@ -47,7 +47,7 @@ Items:
 -------------------------
 
 --- FINAL ORDER #1767469082624 ---
-Date: Sun Jan 04 03:38:02 GMT+08:00 2026
+Date: Sun Jan 04 03:38:02 GMT+08:00 1970
 Name: farah
 Phone: 01155662615
 Address: usm
@@ -55,5 +55,28 @@ Payment: COD
 Total: RM 8.00
 Items:
   - Product ID: RV02 (Qty: 1, Price: 8.00, Subtotal: 8.00)
+-------------------------
+
+--- FINAL ORDER #1767523685037 ---
+Date: Sun Jan 04 18:48:05 GMT+08:00 2026
+Name: ARIN
+Phone: 0145624845
+Address: Universiti Sains Malaysia
+Payment: COD
+Total: RM 18.30
+Items:
+  - Product ID: OAT02 (Qty: 1, Price: 6.50, Subtotal: 6.50)
+  - Product ID: MAT003 (Qty: 2, Price: 5.90, Subtotal: 11.80)
+-------------------------
+
+--- FINAL ORDER #1767524026136 ---
+Date: Sun Jan 04 18:53:46 GMT+08:00 2026
+Name: ARIN
+Phone: 0145624845
+Address: Universiti Sains Malaysia
+Payment: QR
+Total: RM 20.00
+Items:
+  - Product ID: CHIP01 (Qty: 4, Price: 5.00, Subtotal: 20.00)
 -------------------------
 
