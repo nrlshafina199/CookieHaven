@@ -47,13 +47,36 @@ Items:
 -------------------------
 
 --- FINAL ORDER #1767469082624 ---
-Date: Sun Jan 04 03:38:02 GMT+08:00 2026
+Date: Sun Jan 04 03:38:02 GMT+08:00 1970
 Name: farah
 Phone: 01155662615
 Address: usm
 Payment: COD
+Status: Shipped
 Total: RM 8.00
 Items:
   - Product ID: RV02 (Qty: 1, Price: 8.00, Subtotal: 8.00)
+-------------------------
+
+--- FINAL ORDER #1767892316034 ---
+Date: Fri Jan 09 01:11:56 GMT+08:00 1970
+Name: farah
+Phone: 01155662615
+Address: usm
+Payment: COD
+Total: RM 7.00
+Items:
+  - Product ID: PB03 (Qty: 1, Price: 7.00, Subtotal: 7.00)
+-------------------------
+
+--- FINAL ORDER #1767894976996 ---
+Date: Fri Jan 09 01:56:16 GMT+08:00 2026
+Name: farah
+Phone: 01155662615
+Address: usm
+Payment: COD
+Total: RM 5.00
+Items:
+  - Product ID: CHIP01 (Qty: 1, Price: 5.00, Subtotal: 5.00)
 -------------------------
 

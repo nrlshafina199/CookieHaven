@@ -10,6 +10,7 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import server.model.*;
 
+
 public class MainServer {
     private static final Map<String, ShoppingCart> SESSIONS = new ConcurrentHashMap<>();
     private static final String SESSION_COOKIE_KEY = "AUTH_SESSION";
