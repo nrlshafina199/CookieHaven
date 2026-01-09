@@ -10,3 +10,4 @@ test1,nurirdiina@gmail.com,$2a$10$EW/m69bEagSu0Xl1x3kPDuKci3meG3yKm9PozPCnZXdZCG
 shafina,wonpildaisy@gmail.com,$2a$10$SfE206zJEtn7mK4Nx88PJ.7LHcumwhnBN84N6Pr6mJbL8pDh9Ozke
 farah,putrroslan@gmail.com,$2a$10$bNmdBeGH1Kg7jaYqIdiRzuyFrRIANVyRTEhsAlueeLkEAr.vABa9.
 fyna,wonpildaisy@gmail.com,$2a$10$FV8wZvitrIB0Ypg6GrmFXeeb5erI6z9YxcD6ZfGigZHH2975RZXbC
+fyna,wonpildaisy@gmail.com,$2a$10$FmeUFJ9tMrh0VTK6w1BJGuZUYsaWmuMmfoPgEFcPkr4B05WDWc1Aa
