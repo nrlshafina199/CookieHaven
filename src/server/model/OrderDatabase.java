@@ -2,7 +2,6 @@ package server.model;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -10,8 +9,8 @@ import java.util.concurrent.ConcurrentHashMap;
 public class OrderDatabase {
     private static final Map<Long, OrderWithStatus> ORDERS = new ConcurrentHashMap<>();
     private static final String ORDERS_FILE = "final_orders.txt";
-    // Modified to be more flexible with the time zone format seen in your text file
-    private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("EEE MMM dd HH:mm:ss", Locale.ENGLISH);
+
+    private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy", Locale.ENGLISH);
 
     static {
         loadOrders();
@@ -69,7 +68,6 @@ public class OrderDatabase {
     }
 
     private static void saveOrders() {
-        // Updated Date Format for saving to include full details
         SimpleDateFormat saveFormat = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy", Locale.ENGLISH);
         try (BufferedWriter writer = new BufferedWriter(
                 new OutputStreamWriter(new FileOutputStream(ORDERS_FILE), StandardCharsets.UTF_8))) {
@@ -152,7 +150,6 @@ public class OrderDatabase {
                                 currentPaymentMethod, currentCcNumber, currentCcExpiry,
                                 currentTotal, currentItems, currentDate, currentStatus);
                     }
-                    // Reset
                     currentOrderId = null;
                     currentCcNumber = "N/A";
                     currentCcExpiry = "N/A";
@@ -165,8 +162,7 @@ public class OrderDatabase {
                     currentOrderId = Long.parseLong(line.replace("--- FINAL ORDER #", "").replace("---", "").trim());
                 } else if (line.startsWith("Date:")) {
                     try {
-                        // Takes the first 19 characters to avoid TimeZone parsing issues
-                        currentDate = DATE_FORMAT.parse(line.substring(5, 25).trim());
+                        currentDate = DATE_FORMAT.parse(line.substring(5).trim());
                     } catch (Exception e) {
                         currentDate = new Date();
                     }

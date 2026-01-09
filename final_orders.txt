@@ -1,76 +1,5 @@
---- FINAL ORDER #1766330320810 ---
-Date: Mon Dec 21 23:18:40 GMT+08:00 1970
-Name: ARIN
-Phone: 0145624845
-Address: Universiti Sains Malaysia
-Payment: COD
-Total: RM 13.00
-Items:
-  - Product ID: OAT02 (Qty: 2, Price: 6.50, Subtotal: 13.00)
--------------------------
-
---- FINAL ORDER #1766411573859 ---
-Date: Tue Dec 22 21:52:53 GMT+08:00 1970
-Name: jiha
-Phone: 0174582770
-Address: 44 KG SEBERANG PAYA, MUKIM LENGKUAS, BUKIT PINANG
-Payment: COD
-Total: RM 31.50
-Items:
-  - Product ID: PB03 (Qty: 1, Price: 7.00, Subtotal: 7.00)
-  - Product ID: OAT02 (Qty: 3, Price: 6.50, Subtotal: 19.50)
-  - Product ID: CHIP01 (Qty: 1, Price: 5.00, Subtotal: 5.00)
--------------------------
-
---- FINAL ORDER #1766411930205 ---
-Date: Tue Dec 22 21:58:50 GMT+08:00 1970
-Name: jiha
-Phone: 0124598677
-Address: usm
-Payment: CC
-  Card #: 1234567890321456
-  Expiry: 06/26
-Total: RM 7.00
-Items:
-  - Product ID: PB03 (Qty: 1, Price: 7.00, Subtotal: 7.00)
--------------------------
-
---- FINAL ORDER #1767418359317 ---
-Date: Sat Jan 03 13:32:39 GMT+08:00 1970
-Name: farah
-Phone: 01155662615
-Address: usm
-Payment: COD
-Total: RM 5.00
-Items:
-  - Product ID: CHIP01 (Qty: 1, Price: 5.00, Subtotal: 5.00)
--------------------------
-
---- FINAL ORDER #1767469082624 ---
-Date: Sun Jan 04 03:38:02 GMT+08:00 1970
-Name: farah
-Phone: 01155662615
-Address: usm
-Payment: COD
-Status: Shipped
-Total: RM 8.00
-Items:
-  - Product ID: RV02 (Qty: 1, Price: 8.00, Subtotal: 8.00)
--------------------------
-
---- FINAL ORDER #1767892316034 ---
-Date: Fri Jan 09 01:11:56 GMT+08:00 1970
-Name: farah
-Phone: 01155662615
-Address: usm
-Payment: COD
-Total: RM 7.00
-Items:
-  - Product ID: PB03 (Qty: 1, Price: 7.00, Subtotal: 7.00)
--------------------------
-
 --- FINAL ORDER #1767894976996 ---
-Date: Fri Jan 09 01:56:16 GMT+08:00 1970
+Date: Fri Jan 09 01:56:16 GMT+08:00 2026
 Name: farah
 Phone: 01155662615
 Address: usm
@@ -80,26 +9,27 @@ Items:
   - Product ID: CHIP01 (Qty: 1, Price: 5.00, Subtotal: 5.00)
 -------------------------
 
---- FINAL ORDER #1767966964425 ---
-Date: Fri Jan 09 21:56:04 GMT+08:00 2026
-Name: ARIN
-Phone: 0145624845
-Address: Universiti Sains Malaysia
-Payment: COD
-Total: RM 13.00
-Items:
-  - Product ID: OAT02 (Qty: 2, Price: 6.50, Subtotal: 13.00)
--------------------------
-
---- FINAL ORDER #1767967172847 ---
-Date: Fri Jan 09 21:59:32 GMT+08:00 2026
+--- FINAL ORDER #1767968645565 ---
+Date: Fri Jan 09 22:24:05 GMT+08:00 2026
 Name: fyna
 Phone: 0145624845
 Address: Universiti Sains Malaysia
 Payment: COD
 Status: Shipped
-Total: RM 21.00
+Total: RM 26.00
 Items:
-  - Product ID: PB03 (Qty: 3, Price: 7.00, Subtotal: 21.00)
+  - Product ID: OAT02 (Qty: 4, Price: 6.50, Subtotal: 26.00)
+-------------------------
+
+--- FINAL ORDER #1767968729926 ---
+Date: Fri Jan 09 22:25:29 GMT+08:00 2026
+Name: fyna
+Phone: 0123456789
+Address: Universiti Sains Malaysia
+Payment: QR
+Status: Delivered
+Total: RM 35.00
+Items:
+  - Product ID: PB03 (Qty: 5, Price: 7.00, Subtotal: 35.00)
 -------------------------
 
