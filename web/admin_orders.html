@@ -17,7 +17,6 @@
         .orders-table th { background: var(--primary); color: white; padding: 15px; text-align: left; }
         .orders-table td { padding: 15px; border-bottom: 1px solid #eee; }
 
-        .status-badge { background: #fff3e0; color: #e65100; padding: 4px 12px; border-radius: 20px; font-weight: bold; }
         .btn-view { background: var(--accent); color: white; border: none; padding: 8px 15px; border-radius: 5px; cursor: pointer; font-weight: bold; }
 
         .modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); }
@@ -33,12 +32,12 @@
 <aside class="sidebar">
     <h2>🍪 CookieHaven</h2>
     <nav>
-        <a href="/admin/dashboard.html">🏠 Dashboard</a>
-        <a href="/admin/products.html">📦 Manage Products</a>
-        <a href="/admin/orders.html" class="active">📋 View Orders</a>
-        <a href="/admin/feedback.html">💬 Feedback</a>
-        <a href="/admin/reports.html">📊 Reports</a>
-        <a href="/admin/logout.html">🚪 Logout</a>
+        <a href="/admin/dashboard">🏠 Dashboard</a>
+        <a href="/admin/products">📦 Manage Products</a>
+        <a href="/admin/orders" class="active">📋 View Orders</a>
+        <a href="/admin/feedback">💬 Feedback</a>
+        <a href="/admin/reports">📊 Reports</a>
+        <a href="/admin/logout">🚪 Logout</a>
     </nav>
 </aside>
 
@@ -69,19 +68,15 @@
 </div>
 
 <script>
-    let allOrders = [];
-
     function loadOrders() {
         fetch('/admin/orders/api')
             .then(res => res.json())
-            .then(orders => {
-                allOrders = orders;
-                renderTable(orders);
-            });
+            .then(orders => renderTable(orders));
     }
 
     function renderTable(orders) {
         const body = document.getElementById('orderTableBody');
+
         if (!orders.length) {
             body.innerHTML = `<tr><td colspan="5" style="text-align:center;">No orders found.</td></tr>`;
             return;
@@ -91,36 +86,42 @@
             <tr>
                 <td>#${o.orderId}</td>
                 <td><strong>${o.customerName}</strong><br><small>${o.phone}</small></td>
-                <td style="color: #a52a2a; font-weight: bold;">RM ${o.total.toFixed(2)}</td>
-                <td><span class="status-badge">${o.status}</span></td>
-                <td><button class="btn-view" onclick="viewItems('${o.orderId}')">View Items</button></td>
+                <td style="color:#a52a2a;font-weight:bold;">RM ${o.total.toFixed(2)}</td>
+                <td>
+                    <select onchange="updateStatus(${o.orderId}, this.value)">
+                        ${["Pending","Preparing","Shipped","Delivered"].map(s =>
+            `<option value="${s}" ${s===o.status?"selected":""}>${s}</option>`
+        ).join("")}
+                    </select>
+                </td>
+                <td>
+                    <button class="btn-view" onclick="viewItems('${o.orderId}')">
+                        View Items
+                    </button>
+                </td>
             </tr>
         `).join('');
     }
 
-    /* ============================
-       ✅ UPDATED FUNCTION (ONLY CHANGE)
-       ============================ */
+    function updateStatus(orderId, status) {
+        fetch(`/admin/orders/${orderId}/status`, {
+            method: "POST",
+            headers: { "Content-Type": "application/x-www-form-urlencoded" },
+            body: `status=${encodeURIComponent(status)}`
+        });
+    }
+
     function viewItems(orderId) {
         fetch(`/admin/orders/items?orderId=${orderId}`)
             .then(res => res.json())
             .then(items => {
-
-                if (!items.length) {
-                    alert("No cookies found in this order.");
-                    return;
-                }
-
                 document.getElementById('modalTitle').innerText =
                     `Cookies for Order #${orderId}`;
 
                 document.getElementById('orderDetails').innerHTML = `
                     <table class="item-list">
                         <thead>
-                            <tr>
-                                <th>Cookie Name</th>
-                                <th style="text-align:center;">Quantity</th>
-                            </tr>
+                        <tr><th>Cookie Name</th><th style="text-align:center;">Quantity</th></tr>
                         </thead>
                         <tbody>
                             ${items.map(i => `
@@ -128,7 +129,7 @@
                                     <td>${i.productName}</td>
                                     <td style="text-align:center;">${i.quantity}</td>
                                 </tr>
-                            `).join('')}
+                            `).join("")}
                         </tbody>
                     </table>
                 `;
@@ -141,9 +142,9 @@
         document.getElementById('orderModal').style.display = "none";
     }
 
-    window.onclick = (e) => {
-        if (e.target == document.getElementById('orderModal')) closeModal();
-    }
+    window.onclick = e => {
+        if (e.target === document.getElementById('orderModal')) closeModal();
+    };
 
     loadOrders();
 </script>

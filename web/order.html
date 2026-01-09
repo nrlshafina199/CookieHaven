@@ -131,7 +131,7 @@
         <a href="/login.html">👤 Login</a>
         <a href="/order_history.html">📋 My Orders</a>
     </nav>
-    <a href="/cart.html" id="cart-status">🛒 Cart (<span id="cart-count">0</span>)</a>
+    <a href="#" id="cart-status">🛒 Cart (<span id="cart-count">0</span>)</a>
 </header>
 
 <section id="home">
@@ -289,5 +289,26 @@
     }
 </script>
 <script src="cookie_consent.js"></script>
+<script>
+    document.getElementById("cart-status").addEventListener("click", async (e) => {
+        e.preventDefault();
+
+        try {
+            const res = await fetch("/api/user-data");
+            const user = await res.json();
+
+            if (!user.username) {
+                // Not logged in
+                window.location.href = "/login.html";
+            } else {
+                // Logged in
+                window.location.href = "/cart.html";
+            }
+        } catch (err) {
+            // If API fails, be safe → login
+            window.location.href = "/login.html";
+        }
+    });
+</script>
 </body>
 </html>
