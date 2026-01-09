@@ -1,5 +1,4 @@
 function loadAdminReviews() {
-    // 🔴 IMPORTANT: admin=true to get ALL reviews
     fetch("/api/reviews?admin=true")
         .then(res => res.text())
         .then(data => {
@@ -52,5 +51,4 @@ function removeReview(id) {
     }).then(loadAdminReviews);
 }
 
-// Load immediately on page open
 loadAdminReviews();

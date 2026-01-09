@@ -6,7 +6,6 @@ import java.util.*;
 public class ShoppingCart implements Serializable {
     private final List<CartItem> items = new ArrayList<>();
 
-    // FIX: Updated parameters to include 'name'
     public void addItem(String id, String name, double price, int qty) {
         for (CartItem item : items) {
             if (item.getProductId().equals(id)) {
@@ -14,7 +13,6 @@ public class ShoppingCart implements Serializable {
                 return;
             }
         }
-        // This now matches the (String, String, double, int) constructor
         items.add(new CartItem(id, name, price, qty));
     }
 

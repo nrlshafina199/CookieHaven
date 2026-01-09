@@ -43,9 +43,6 @@ public class MainServer {
 
         server.createContext("/api/products", new PublicProductHandler());
 
-        // ============================
-        // ✅ NEW: Fetch order items ONLY
-        // ============================
         server.createContext("/admin/orders/items", ex -> {
             if (!ex.getRequestMethod().equalsIgnoreCase("GET")) {
                 ex.sendResponseHeaders(405, -1);
@@ -97,9 +94,6 @@ public class MainServer {
             ex.close();
         });
 
-        // ============================
-        // Existing admin feedback page
-        // ============================
         server.createContext("/admin/feedback", ex -> {
             byte[] data = readFile("web/admin_feedback.html");
             ex.getResponseHeaders().add("Content-Type", "text/html; charset=UTF-8");

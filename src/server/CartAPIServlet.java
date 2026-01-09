@@ -17,7 +17,7 @@ public class CartAPIServlet implements HttpHandler {
         if (username == null) {
             String json = "{\"success\":false, \"message\":\"Please login first!\"}";
             sendResponse(ex, 401, json);
-            return; // Stops the guest from reaching the cart logic below
+            return;
         }
 
         String method = ex.getRequestMethod();

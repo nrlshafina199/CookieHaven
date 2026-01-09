@@ -34,7 +34,6 @@ public class Order implements Serializable {
         this.orderDate = new Date();
     }
 
-    // --- GETTERS (Fixed: All symbols now exist) ---
     public long getOrderId() { return orderId; }
     public String getCustomerName() { return customerName; }
     public String getPhone() { return phone; }

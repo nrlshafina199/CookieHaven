@@ -5,9 +5,9 @@
     <title>Home & Shop | CookieHaven</title>
     <style>
         :root {
-            --primary: #5d4037;   /* Dark Chocolate */
-            --accent: #8d6e63;    /* Milk Chocolate */
-            --bg: #f8f1e7;        /* Cream/Cookie base */
+            --primary: #5d4037;
+            --accent: #8d6e63;
+            --bg: #f8f1e7;
         }
 
         body {
@@ -68,7 +68,6 @@
             justify-content: center;
         }
 
-        /* CARD STYLE - Kept exactly as you like it */
         .product-card {
             background: white;
             border: 2px solid var(--primary);
@@ -200,7 +199,6 @@
                 return;
             }
 
-            // SIMPLIFIED: No images, just your original card layout.
             container.innerHTML = products.map(p => `
                 <div class="product-card">
                     <h3>${p.name}</h3>

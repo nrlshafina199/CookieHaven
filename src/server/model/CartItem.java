@@ -17,8 +17,6 @@ public class CartItem implements Serializable {
         this.quantity = quantity;
     }
 
-    // --- GETTERS (Fixes the "Cannot resolve method" errors) ---
-
     public String getProductId() {
         return productId;
     }
@@ -35,12 +33,9 @@ public class CartItem implements Serializable {
         return quantity;
     }
 
-    // FIX: This method calculates the total for this specific row (Price * Qty)
     public double getSubtotal() {
         return this.price * this.quantity;
     }
-
-    // --- SETTERS (Optional, but useful) ---
 
     public void setQuantity(int quantity) {
         this.quantity = quantity;

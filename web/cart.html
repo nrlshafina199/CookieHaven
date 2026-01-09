@@ -72,14 +72,10 @@
 </div>
 
 <script>
-    // Run after page loads
     window.addEventListener('load', function() {
         updateCartUI();
     });
 
-    /**
-     * Check if cart is empty and update UI accordingly
-     */
     function updateCartUI() {
         const tableBody = document.getElementById('cart-table-body');
         const rows = tableBody.getElementsByTagName('tr');
@@ -104,9 +100,6 @@
         }
     }
 
-    /**
-     * Override the removeItem function to refresh UI after removal
-     */
     async function removeItem(productId) {
         if (!confirm('Remove this cookie from your cart?')) return;
 
@@ -133,9 +126,6 @@
             alert('An error occurred while removing the item.');
         }
     }
-
-    // Optional: Also call updateCartUI after reload (in case Java generates empty table)
-    // But since you reload the page, Java will rebuild everything correctly
 </script>
 </body>
 </html>
