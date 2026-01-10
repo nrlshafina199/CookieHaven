@@ -33,3 +33,48 @@ Items:
   - Product ID: PB03 (Qty: 5, Price: 7.00, Subtotal: 35.00)
 -------------------------
 
+--- FINAL ORDER #1768027091570 ---
+Date: Sat Jan 10 14:38:11 GMT+08:00 2026
+Name: ndina
+Phone: 0166973245
+Address: usm gelugor
+Payment: COD
+Total: RM 5.00
+Items:
+  - Product ID: CHIP01 (Qty: 1, Price: 5.00, Subtotal: 5.00)
+-------------------------
+
+--- FINAL ORDER #1768027128833 ---
+Date: Sat Jan 10 14:38:48 GMT+08:00 2026
+Name: dina25
+Phone: 0166973245
+Address: usm
+Payment: COD
+Status: Shipped
+Total: RM 6.50
+Items:
+  - Product ID: OAT02 (Qty: 1, Price: 6.50, Subtotal: 6.50)
+-------------------------
+
+--- FINAL ORDER #1768031906886 ---
+Date: Sat Jan 10 15:58:26 GMT+08:00 2026
+Name: TEST2
+Phone: 0166973245
+Address: USM GELUGOR
+Payment: QR
+Total: RM 5.00
+Items:
+  - Product ID: CHIP01 (Qty: 1, Price: 5.00, Subtotal: 5.00)
+-------------------------
+
+--- FINAL ORDER #1768031964413 ---
+Date: Sat Jan 10 15:59:24 GMT+08:00 2026
+Name: IRDINA
+Phone: 0123456789
+Address: USM GELUGOR
+Payment: COD
+Total: RM 6.50
+Items:
+  - Product ID: OAT02 (Qty: 1, Price: 6.50, Subtotal: 6.50)
+-------------------------
+

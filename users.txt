@@ -11,3 +11,5 @@ shafina,wonpildaisy@gmail.com,$2a$10$SfE206zJEtn7mK4Nx88PJ.7LHcumwhnBN84N6Pr6mJb
 farah,putrroslan@gmail.com,$2a$10$bNmdBeGH1Kg7jaYqIdiRzuyFrRIANVyRTEhsAlueeLkEAr.vABa9.
 fyna,wonpildaisy@gmail.com,$2a$10$FV8wZvitrIB0Ypg6GrmFXeeb5erI6z9YxcD6ZfGigZHH2975RZXbC
 fyna,wonpildaisy@gmail.com,$2a$10$FmeUFJ9tMrh0VTK6w1BJGuZUYsaWmuMmfoPgEFcPkr4B05WDWc1Aa
+test2,test2@gmail.com,$2a$10$wKRzSrtgDQ3fVNXlIp6pleHhRnovNeWzbdFfD1FI5uQ/7p9sYoUDS
+NRIRDINA,nurirdiina@gmail.com,$2a$10$2l2POZa677GTTiQy2nmzfubB1/EBu2MqCbRXFfmrmMcKqFim68/pW

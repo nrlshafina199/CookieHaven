@@ -10,14 +10,12 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import server.model.*;
 
-
 public class MainServer {
     private static final Map<String, ShoppingCart> SESSIONS = new ConcurrentHashMap<>();
     private static final String SESSION_COOKIE_KEY = "AUTH_SESSION";
 
     public static void main(String[] args) throws Exception {
 
-        //HttpServer server = HttpServer.create(new InetSocketAddress(8080), 0);
         int port = Integer.parseInt(System.getenv().getOrDefault("PORT", "8080"));
         HttpServer server = HttpServer.create(new InetSocketAddress(port), 0);
 
@@ -34,15 +32,18 @@ public class MainServer {
 
         server.createContext("/cart.html", new CartPageHandler());
         server.createContext("/", new StaticFileHandler());
-        server.createContext("/api", new AuthHandler());
 
+        // Setup Authentication Handlers
         AuthHandler authHandler = new AuthHandler();
+        server.createContext("/api", authHandler);
         server.createContext("/api/register", authHandler);
         server.createContext("/api/login", authHandler);
+        server.createContext("/api/forgot-password", authHandler); // Register the forgot password endpoint
         server.createContext("/logout", authHandler);
 
         server.createContext("/api/products", new PublicProductHandler());
 
+        // Handle order item details for admin
         server.createContext("/admin/orders/items", ex -> {
             if (!ex.getRequestMethod().equalsIgnoreCase("GET")) {
                 ex.sendResponseHeaders(405, -1);
@@ -94,6 +95,7 @@ public class MainServer {
             ex.close();
         });
 
+        // Admin feedback page
         server.createContext("/admin/feedback", ex -> {
             byte[] data = readFile("web/admin_feedback.html");
             ex.getResponseHeaders().add("Content-Type", "text/html; charset=UTF-8");
@@ -102,6 +104,7 @@ public class MainServer {
             ex.close();
         });
 
+        // Static pages
         server.createContext("/login.html", new StaticFileHandler());
         server.createContext("/register.html", new StaticFileHandler());
         server.createContext("/my_profile.html", new StaticFileHandler());
